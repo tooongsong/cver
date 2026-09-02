@@ -5,7 +5,7 @@ import { importFile } from '../../services/importService';
 import styles from './LandingPage.module.css';
 
 type Props = {
-  onLoad: (resume: ResumeData, styleOverrides: Record<string, string>, layout: LayoutSchema, rawHtml?: string) => void;
+  onLoad: (resume: ResumeData, styleOverrides: Record<string, string>, layout: LayoutSchema, rawHtml?: string, docxBuffer?: ArrayBuffer) => void;
   onUseSample: () => void;
 };
 
@@ -20,7 +20,7 @@ export function LandingPage({ onLoad, onUseSample }: Props) {
     setError(null);
     try {
       const result = await importFile(file);
-      onLoad(result.resume, result.styleOverrides, result.layout, result.rawHtml);
+      onLoad(result.resume, result.styleOverrides, result.layout, result.rawHtml, result.docxBuffer);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Import failed. Try a .docx or .txt file.');
       setLoading(false);

@@ -7,6 +7,7 @@ import { PasteImport } from './components/PasteImport/PasteImport';
 import { ToolPanel } from './components/ToolPanel/ToolPanel';
 import { ImportDrawer } from './components/ImportDrawer/ImportDrawer';
 import { RawResumePage } from './components/Editor/RawResumePage';
+import { DocxPreviewPage } from './components/Editor/DocxPreviewPage';
 import type { LayoutSchema } from './types/layout';
 import { LandingPage } from './components/LandingPage/LandingPage';
 import { TypographyPanel, DEFAULT_TYPOGRAPHY } from './components/TypographyPanel/TypographyPanel';
@@ -25,6 +26,7 @@ export default function App() {
   const [typography, setTypography] = useState<TypographySettings>(DEFAULT_TYPOGRAPHY);
   const [importedLayout, setImportedLayout] = useState<LayoutSchema | null>(null);
   const [rawHtml, setRawHtml] = useState<string | null>(null);
+  const [docxBuffer, setDocxBuffer] = useState<ArrayBuffer | null>(null);
 
   const pendingCount = editor.proposedChanges.filter((c) => c.status === 'pending').length;
   const totalChanges = editor.proposedChanges.length;
@@ -49,6 +51,7 @@ export default function App() {
     styleOverrides: Record<string, string>,
     layout?: LayoutSchema,
     html?: string,
+    buffer?: ArrayBuffer,
   ) {
     const fontRaw = styleOverrides['--resume-font'] ?? '';
     const detFont = fontRaw.replace(/['"]/g, '').split(',')[0].trim();
@@ -66,8 +69,8 @@ export default function App() {
       lineHeight: detLineH ? parseFloat(detLineH) || DEFAULT_TYPOGRAPHY.lineHeight : DEFAULT_TYPOGRAPHY.lineHeight,
     });
     if (layout) setImportedLayout(layout);
-    console.log('[App] setRawHtml:', html ? `${html.length} chars` : 'null');
     setRawHtml(html ?? null);
+    setDocxBuffer(buffer ?? null);
   }
 
   // Build typography CSS overrides
@@ -92,9 +95,9 @@ export default function App() {
   if (appPhase === 'landing') {
     return (
       <LandingPage
-        onLoad={(resume, styleOverrides, layout, html) => {
+        onLoad={(resume, styleOverrides, layout, html, buffer) => {
           editor.loadNewResume(resume, styleOverrides);
-          applyImportedStyle(styleOverrides, layout, html);
+          applyImportedStyle(styleOverrides, layout, html, buffer);
           setAppPhase('editor');
         }}
         onUseSample={() => setAppPhase('editor')}
@@ -182,9 +185,9 @@ export default function App() {
           {openDrawer === 'import' && (
             <ToolPanel title="/01 IMPORT" onClose={() => setOpenDrawer(null)}>
               <ImportDrawer
-                onLoad={(resume, styleOverrides, layout, html) => {
+                onLoad={(resume, styleOverrides, layout, html, buffer) => {
                   editor.loadNewResume(resume, styleOverrides);
-                  applyImportedStyle(styleOverrides, layout, html);
+                  applyImportedStyle(styleOverrides, layout, html, buffer);
                   setOpenDrawer(null);
                 }}
               />
@@ -293,7 +296,12 @@ export default function App() {
             <div className={`${styles.cornerMark} ${styles.bl}`} aria-hidden />
             <div className={`${styles.cornerMark} ${styles.br}`} aria-hidden />
 
-            {rawHtml ? (
+            {docxBuffer ? (
+              <DocxPreviewPage
+                buffer={docxBuffer}
+                onFitChange={editor.setFitResult}
+              />
+            ) : rawHtml ? (
               <RawResumePage
                 html={rawHtml}
                 onChange={setRawHtml}

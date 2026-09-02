@@ -9,7 +9,8 @@ export type ImportResult = {
   resume: ResumeData;
   layout: LayoutSchema;
   styleOverrides: Record<string, string>;
-  rawHtml?: string;       // AI-generated HTML — rendered directly when present
+  rawHtml?: string;
+  docxBuffer?: ArrayBuffer;  // original DOCX bytes — rendered via docx-preview
   confidence: ImportConfidence;
   warnings: string[];
   sourceName: string;
@@ -362,9 +363,7 @@ export async function importDocx(file: File): Promise<ImportResult> {
     hasName && hasContact && hasExperience ? 'high' :
     hasName && (hasContact || hasExperience) ? 'moderate' : 'low';
 
-  const rawHtml = buildHtmlFromMammoth(mammothHtml, layout);
-
-  return { resume, layout, styleOverrides, rawHtml, confidence, warnings, sourceName: file.name };
+  return { resume, layout, styleOverrides, docxBuffer: buffer, confidence, warnings, sourceName: file.name };
 }
 
 export async function importTxt(file: File): Promise<ImportResult> {
