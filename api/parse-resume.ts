@@ -110,6 +110,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     return;
   }
 
+  console.log('[parse-resume] request received, key present:', !!process.env.OPENAI_API_KEY);
   if (!process.env.OPENAI_API_KEY) {
     res.writeHead(500, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'OPENAI_API_KEY is not configured on the server.' }));
@@ -186,6 +187,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     res.end(JSON.stringify(result));
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
+    console.error('[parse-resume] handler error:', msg, err instanceof Error ? err.stack : '');
     res.writeHead(500, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: msg }));
   }
