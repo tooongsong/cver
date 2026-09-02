@@ -10,32 +10,35 @@ type Props = {
 };
 
 export function DocxPreviewPage({ buffer, onFitChange }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const renderedBuffer = useRef<ArrayBuffer | null>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!wrapperRef.current) return;
     if (renderedBuffer.current === buffer) return;
     renderedBuffer.current = buffer;
 
-    renderAsync(buffer, containerRef.current, undefined, {
-      inWrapper: false,
-      ignoreWidth: true,
+    wrapperRef.current.innerHTML = '';
+
+    renderAsync(buffer, wrapperRef.current, undefined, {
+      inWrapper: true,
+      ignoreWidth: false,
       ignoreHeight: false,
       ignoreFonts: false,
-      breakPages: false,
+      breakPages: true,
       renderHeaders: true,
-      renderFooters: false,
+      renderFooters: true,
+      useBase64URL: true,
     }).then(() => {
-      if (containerRef.current) {
-        onFitChange(measureFit(containerRef.current));
+      if (wrapperRef.current) {
+        onFitChange(measureFit(wrapperRef.current));
       }
     });
   }, [buffer, onFitChange]);
 
   return (
-    <div className={styles.wrapper}>
-      <div ref={containerRef} className={`${styles.page} resume-page`} />
+    <div className={styles.scaler}>
+      <div ref={wrapperRef} className={styles.docxContainer} />
     </div>
   );
 }

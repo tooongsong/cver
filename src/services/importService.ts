@@ -363,7 +363,39 @@ export async function importDocx(file: File): Promise<ImportResult> {
     hasName && hasContact && hasExperience ? 'high' :
     hasName && (hasContact || hasExperience) ? 'moderate' : 'low';
 
-  return { resume, layout, styleOverrides, docxBuffer: buffer, confidence, warnings, sourceName: file.name };
+  // Ask AI to generate faithful HTML matching the original layout
+  let rawHtml: string | undefined;
+  try {
+    const layoutSummary = JSON.stringify({
+      fontFamily: layout.fontFamily,
+      bodySize: layout.bodySize,
+      nameSize: layout.nameSize,
+      headingSize: layout.headingSize,
+      lineHeight: layout.lineHeight,
+      margins: layout.margins,
+      sectionGap: layout.sectionGap,
+      entryGap: layout.entryGap,
+      bulletIndent: layout.bulletIndent,
+      accentColor: layout.accentColor,
+      headingUppercase: layout.headingUppercase,
+      showDividers: layout.showDividers,
+      dateAlignment: layout.dateAlignment,
+      sectionOrder: layout.sectionOrder,
+      columns: layout.columns,
+    }, null, 2);
+
+    const res = await fetch('/api/parse-resume', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'docx', mammothHtml, layoutJson: layoutSummary }),
+    });
+    if (res.ok) {
+      const aiResult = await res.json() as { html?: string };
+      if (aiResult.html) rawHtml = aiResult.html;
+    }
+  } catch { /* fall back silently */ }
+
+  return { resume, layout, styleOverrides, rawHtml, confidence, warnings, sourceName: file.name };
 }
 
 export async function importTxt(file: File): Promise<ImportResult> {

@@ -1,28 +1,21 @@
-.wrapper {
+.scaler {
   transform-origin: top center;
 }
 
-.page {
-  width: 8.5in;
-  min-height: 11in;
+/* Let docx-preview render at its natural size, then we clip to page */
+.docxContainer {
   background: white;
   box-shadow: var(--shadow-paper);
-  box-sizing: border-box;
-  overflow: hidden;
-  position: relative;
 }
 
-/* docx-preview scoped styles */
-.page :global(.docx-wrapper) {
-  background: transparent !important;
+/* Clean up docx-preview's default wrapper chrome */
+.docxContainer :global(.docx-wrapper) {
+  background: white !important;
   padding: 0 !important;
+  display: block !important;
 }
 
-.page :global(section.docx) {
-  width: 100% !important;
-  min-height: unset !important;
+.docxContainer :global(section.docx) {
   box-shadow: none !important;
   margin: 0 !important;
-  padding: 0 !important;
-  background: white !important;
 }
