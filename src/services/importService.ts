@@ -276,6 +276,70 @@ export function buildStyleOverrides(layout: LayoutSchema): Record<string, string
   };
 }
 
+// ── Client-side HTML builder (no AI needed) ───────────────────────
+
+function buildHtmlFromMammoth(mammothHtml: string, layout: LayoutSchema): string {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(mammothHtml, 'text/html');
+  const body = doc.body;
+
+  const accent = layout.accentColor || '#1a1a1a';
+  const dividerCss = layout.showDividers
+    ? `border-bottom: 1px solid ${accent}; padding-bottom: 2pt;`
+    : '';
+
+  // Style each element in place
+  let headingCount = 0;
+  body.querySelectorAll<HTMLElement>('h1,h2,h3,h4,h5,h6').forEach((h) => {
+    if (headingCount === 0 && h.tagName === 'H1') {
+      // First H1 is typically the candidate name
+      h.style.cssText = [
+        `font-size: ${layout.nameSize}`,
+        `font-weight: bold`,
+        `font-family: ${layout.fontFamily}`,
+        `color: #1a1a1a`,
+        `margin: 0 0 4pt`,
+        `line-height: 1.2`,
+      ].join('; ');
+    } else {
+      h.style.cssText = [
+        `font-size: ${layout.headingSize}`,
+        `font-weight: bold`,
+        `font-family: ${layout.fontFamily}`,
+        `color: ${accent}`,
+        layout.headingUppercase ? 'text-transform: uppercase' : '',
+        layout.headingUppercase ? 'letter-spacing: 0.06em' : '',
+        `margin: ${layout.sectionGap} 0 3pt`,
+        dividerCss,
+      ].filter(Boolean).join('; ');
+    }
+    headingCount++;
+  });
+
+  body.querySelectorAll<HTMLElement>('p').forEach((p) => {
+    p.style.cssText = `margin: 0 0 2pt; font-family: ${layout.fontFamily}; font-size: ${layout.bodySize};`;
+  });
+
+  body.querySelectorAll<HTMLElement>('ul, ol').forEach((list) => {
+    list.style.cssText = `padding-left: ${layout.bulletIndent || '14pt'}; margin: 1pt 0 ${layout.entryGap};`;
+  });
+
+  body.querySelectorAll<HTMLElement>('li').forEach((li) => {
+    li.style.cssText = `margin-bottom: 1pt; font-family: ${layout.fontFamily}; font-size: ${layout.bodySize};`;
+  });
+
+  const containerStyle = [
+    `padding: ${layout.margins.top} ${layout.margins.right} ${layout.margins.bottom} ${layout.margins.left}`,
+    `font-family: ${layout.fontFamily}`,
+    `font-size: ${layout.bodySize}`,
+    `line-height: ${layout.lineHeight}`,
+    `color: #1a1a1a`,
+    `box-sizing: border-box`,
+  ].join('; ');
+
+  return `<div style="${containerStyle}">${body.innerHTML}</div>`;
+}
+
 // ── Importers ─────────────────────────────────────────────────────
 
 export async function importDocx(file: File): Promise<ImportResult> {
@@ -298,40 +362,8 @@ export async function importDocx(file: File): Promise<ImportResult> {
     hasName && hasContact && hasExperience ? 'high' :
     hasName && (hasContact || hasExperience) ? 'moderate' : 'low';
 
-  // Ask AI to generate faithful HTML from the mammoth content + detected layout
-  let rawHtml: string | undefined;
-  try {
-    const layoutSummary = JSON.stringify({
-      fontFamily: layout.fontFamily,
-      bodySize: layout.bodySize,
-      nameSize: layout.nameSize,
-      headingSize: layout.headingSize,
-      lineHeight: layout.lineHeight,
-      margins: layout.margins,
-      sectionGap: layout.sectionGap,
-      entryGap: layout.entryGap,
-      bulletIndent: layout.bulletIndent,
-      accentColor: layout.accentColor,
-      headingUppercase: layout.headingUppercase,
-      showDividers: layout.showDividers,
-      dateAlignment: layout.dateAlignment,
-      sectionOrder: layout.sectionOrder,
-      columns: layout.columns,
-    }, null, 2);
+  const rawHtml = buildHtmlFromMammoth(mammothHtml, layout);
 
-    const res = await fetch('/api/parse-resume', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'docx', mammothHtml, layoutJson: layoutSummary }),
-    });
-    const aiResult = await res.json() as { html?: string; error?: string };
-    console.log('[import] API status:', res.status, 'html length:', aiResult.html?.length ?? 0, 'error:', aiResult.error);
-    if (res.ok && aiResult.html) rawHtml = aiResult.html;
-  } catch (err) {
-    console.error('[import] AI call failed:', err);
-  }
-
-  console.log('[import] rawHtml set:', !!rawHtml, 'length:', rawHtml?.length ?? 0);
   return { resume, layout, styleOverrides, rawHtml, confidence, warnings, sourceName: file.name };
 }
 
