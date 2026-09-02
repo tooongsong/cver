@@ -66,6 +66,7 @@ export default function App() {
       lineHeight: detLineH ? parseFloat(detLineH) || DEFAULT_TYPOGRAPHY.lineHeight : DEFAULT_TYPOGRAPHY.lineHeight,
     });
     if (layout) setImportedLayout(layout);
+    console.log('[App] setRawHtml:', html ? `${html.length} chars` : 'null');
     setRawHtml(html ?? null);
   }
 

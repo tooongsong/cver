@@ -324,12 +324,14 @@ export async function importDocx(file: File): Promise<ImportResult> {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type: 'docx', mammothHtml, layoutJson: layoutSummary }),
     });
-    if (res.ok) {
-      const aiResult = await res.json() as { html?: string };
-      if (aiResult.html) rawHtml = aiResult.html;
-    }
-  } catch { /* fall back to structured template if AI fails */ }
+    const aiResult = await res.json() as { html?: string; error?: string };
+    console.log('[import] API status:', res.status, 'html length:', aiResult.html?.length ?? 0, 'error:', aiResult.error);
+    if (res.ok && aiResult.html) rawHtml = aiResult.html;
+  } catch (err) {
+    console.error('[import] AI call failed:', err);
+  }
 
+  console.log('[import] rawHtml set:', !!rawHtml, 'length:', rawHtml?.length ?? 0);
   return { resume, layout, styleOverrides, rawHtml, confidence, warnings, sourceName: file.name };
 }
 
