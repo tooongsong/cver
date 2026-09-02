@@ -1,7 +1,5 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import OpenAI from 'openai';
-import chromium from '@sparticuz/chromium';
-import puppeteer from 'puppeteer-core';
 
 // ── Prompts ───────────────────────────────────────────────────────
 
@@ -77,30 +75,6 @@ Rules for "html":
 - Preserve ALL text from the input exactly
 - Make it look like a professional, print-ready resume`;
 
-// ── PDF → image ───────────────────────────────────────────────────
-
-async function pdfToImage(base64Pdf: string): Promise<string> {
-  const executablePath = await chromium.executablePath();
-  const browser = await puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: { width: 816, height: 1056 },
-    executablePath,
-    headless: true,
-  });
-  try {
-    const page = await browser.newPage();
-    await page.goto(`data:application/pdf;base64,${base64Pdf}`, {
-      waitUntil: 'load',
-      timeout: 15000,
-    });
-    await new Promise((r) => setTimeout(r, 1800));
-    const shot = await page.screenshot({ type: 'jpeg', quality: 90 });
-    return Buffer.from(shot).toString('base64');
-  } finally {
-    await browser.close();
-  }
-}
-
 // ── Handler ───────────────────────────────────────────────────────
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
@@ -152,14 +126,9 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       return;
     }
 
-    // ── Vision mode (image / PDF) ───────────────────────────────
-    let imageBase64 = parsed.data ?? '';
-    let imageMime = parsed.mimeType ?? 'image/jpeg';
-
-    if (parsed.mimeType === 'application/pdf') {
-      imageBase64 = await pdfToImage(parsed.data ?? '');
-      imageMime = 'image/jpeg';
-    }
+    // ── Vision mode (image) — PDF is rendered to image client-side ────
+    const imageBase64 = parsed.data ?? '';
+    const imageMime = parsed.mimeType ?? 'image/jpeg';
 
     const response = await client.chat.completions.create({
       model: 'gpt-4o',

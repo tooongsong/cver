@@ -10,12 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@sparticuz/chromium": "^149.0.0",
     "docx-preview": "^0.4.0",
     "jszip": "^3.10.1",
     "mammoth": "^1.12.2",
     "openai": "^7.9.0",
-    "puppeteer-core": "^25.9.0",
+    "pdfjs-dist": "^6.3.289",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

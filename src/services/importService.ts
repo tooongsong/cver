@@ -393,7 +393,10 @@ export async function importDocx(file: File): Promise<ImportResult> {
       const aiResult = await res.json() as { html?: string };
       if (aiResult.html) rawHtml = aiResult.html;
     }
-  } catch { /* fall back silently */ }
+  } catch { /* fall through to local builder */ }
+
+  // Fallback: if AI failed or is unavailable, use the local mammoth+layout renderer
+  if (!rawHtml) rawHtml = buildHtmlFromMammoth(mammothHtml, layout);
 
   return { resume, layout, styleOverrides, rawHtml, confidence, warnings, sourceName: file.name };
 }
@@ -418,17 +421,50 @@ export async function importTxt(file: File): Promise<ImportResult> {
   };
 }
 
-export async function importViaAI(file: File): Promise<ImportResult> {
-  const buffer = await file.arrayBuffer();
-  // Use Uint8Array chunk approach for large files to avoid stack overflow
-  const bytes = new Uint8Array(buffer);
+async function renderPdfFirstPageToJpegBase64(pdfBuffer: ArrayBuffer): Promise<string> {
+  const pdfjsLib = await import('pdfjs-dist');
+  const workerSrc = (await import('pdfjs-dist/build/pdf.worker.min.mjs?url')).default;
+  pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+
+  const pdf = await pdfjsLib.getDocument({ data: pdfBuffer }).promise;
+  const page = await pdf.getPage(1);
+  const scale = 2.0;   // higher = better OCR/vision quality
+  const viewport = page.getViewport({ scale });
+
+  const canvas = document.createElement('canvas');
+  canvas.width = viewport.width;
+  canvas.height = viewport.height;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Could not get 2d canvas context');
+
+  await page.render({ canvasContext: ctx, viewport, canvas }).promise;
+
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+  return dataUrl.split(',')[1];   // strip "data:image/jpeg;base64," prefix
+}
+
+function bytesToBase64(bytes: Uint8Array): string {
   let binary = '';
   const chunkSize = 8192;
   for (let i = 0; i < bytes.length; i += chunkSize) {
     binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
   }
-  const base64 = btoa(binary);
-  const mimeType = file.type || (file.name.endsWith('.pdf') ? 'application/pdf' : 'image/jpeg');
+  return btoa(binary);
+}
+
+export async function importViaAI(file: File): Promise<ImportResult> {
+  const buffer = await file.arrayBuffer();
+  const ext = file.name.split('.').pop()?.toLowerCase();
+
+  let base64: string;
+  let mimeType: string;
+  if (ext === 'pdf') {
+    base64 = await renderPdfFirstPageToJpegBase64(buffer);
+    mimeType = 'image/jpeg';
+  } else {
+    base64 = bytesToBase64(new Uint8Array(buffer));
+    mimeType = file.type || 'image/jpeg';
+  }
 
   const res = await fetch('/api/parse-resume', {
     method: 'POST',

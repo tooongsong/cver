@@ -92,7 +92,7 @@ export function LandingPage({ onLoad, onUseSample }: Props) {
         </div>
 
         <p className={styles.note}>
-          PDF import coming soon &nbsp;·&nbsp; Files processed locally &nbsp;·&nbsp; No account required
+          DOCX · PDF · Image &nbsp;·&nbsp; Files processed locally &nbsp;·&nbsp; No account required
         </p>
       </div>
 
