@@ -1,14 +1,23 @@
+import { useState } from 'react';
 import { useResumeEditor } from './hooks/useResumeEditor';
 import { JDPanel } from './components/JDPanel/JDPanel';
 import { ResumePage } from './components/Editor/ResumePage';
 import { ReviewPanel } from './components/ReviewPanel/ReviewPanel';
+import { PasteImport } from './components/PasteImport/PasteImport';
 import { VersionSwitcher } from './components/VersionSwitcher/VersionSwitcher';
 import { ExportControls } from './components/ExportControls/ExportControls';
 import { TemplatePicker } from './components/TemplatePicker/TemplatePicker';
+import { Drawer } from './components/Drawer/Drawer';
 import styles from './App.module.css';
+
+type DrawerType = 'jd' | 'changes' | 'paste' | null;
 
 export default function App() {
   const editor = useResumeEditor();
+  const [openDrawer, setOpenDrawer] = useState<DrawerType>(null);
+
+  const pendingCount = editor.proposedChanges.filter((c) => c.status === 'pending').length;
+  const totalChanges = editor.proposedChanges.length;
 
   const highlightedBulletIds = editor.proposedChanges
     .filter((c) => c.status === 'pending' && c.field.startsWith('bullet:'))
@@ -22,24 +31,60 @@ export default function App() {
   const fitPct = Math.round(editor.fitResult.scale * 100);
   const fitOk = editor.fitResult.fits || editor.fitResult.scale >= 0.82;
 
+  function toggleDrawer(d: DrawerType) {
+    setOpenDrawer((prev) => (prev === d ? null : d));
+  }
+
   return (
     <div className={styles.app}>
-      <header className={styles.topBar} data-print="hide">
-        <div className={styles.topBarLeft}>
+      {/* ── Toolbar ──────────────────────────────────────────────── */}
+      <header className={styles.toolbar} data-print="hide">
+        <div className={styles.toolbarBrand}>
           <span className={styles.logo}>
-            <span className={styles.logoMark}>●</span>
-            cver
+            <span className={styles.logoMark}>●</span>cver
           </span>
-          <span className={styles.mockBadge}>mock mode</span>
         </div>
-        <div className={styles.topBarCenter}>
-          <span className={styles.tagline}>role-specific resume editor</span>
-        </div>
-        <div className={styles.topBarRight}>
+
+        <div className={styles.toolbarActions}>
+          <button className={`${styles.toolBtn} ${styles.toolBtnDisabled}`} disabled>
+            Import
+          </button>
+          <button
+            className={`${styles.toolBtn} ${openDrawer === 'jd' ? styles.toolBtnActive : ''}`}
+            onClick={() => toggleDrawer('jd')}
+          >
+            Job description
+            {editor.isTailoring && <span className={styles.toolBtnSpinner} />}
+          </button>
+          <button
+            className={`${styles.toolBtn} ${openDrawer === 'paste' ? styles.toolBtnActive : ''}`}
+            onClick={() => toggleDrawer('paste')}
+          >
+            Paste text
+          </button>
           <TemplatePicker
             activeId={editor.activeTemplate.id}
             onChange={editor.changeTemplate}
           />
+        </div>
+
+        <div className={styles.toolbarStatus}>
+          <button
+            className={`${styles.fitStatus} ${fitOk ? styles.fitOk : styles.fitWarn}`}
+            onClick={() => totalChanges > 0 ? toggleDrawer('changes') : undefined}
+            disabled={totalChanges === 0}
+          >
+            <span className={styles.fitDot} />
+            {editor.fitResult.fits ? '1 page' : `${fitPct}% fit`}
+            {totalChanges > 0 && (
+              <span className={styles.changesBadge}>
+                {pendingCount > 0 ? `${pendingCount}` : '✓'}
+              </span>
+            )}
+          </button>
+        </div>
+
+        <div className={styles.toolbarRight}>
           <VersionSwitcher
             versions={editor.versionHistory}
             onRestore={editor.restoreVersion}
@@ -62,27 +107,38 @@ export default function App() {
         </div>
       </header>
 
-      <div className={styles.mobileTabs} data-print="hide">
-        {(['jd', 'editor', 'review'] as const).map((tab) => (
-          <button
-            key={tab}
-            className={`${styles.mobileTab} ${editor.activeView === tab ? styles.mobileTabActive : ''}`}
-            onClick={() => editor.setActiveView(tab)}
-          >
-            {tab === 'jd' ? 'Job description' : tab === 'editor' ? 'Resume' : 'AI changes'}
-          </button>
-        ))}
-      </div>
-
+      {/* ── Workspace — resume is the entire view ──────────────── */}
       <main className={styles.workspace}>
-        <aside
-          className={`${styles.sidePanel} ${styles.panelLeft} ${editor.activeView !== 'jd' ? styles.hiddenMobile : ''}`}
-          data-print="hide"
-        >
-          <div className={styles.sectionMark}>
-            <span className={styles.sectionNum}>01</span>
-            <span className={styles.sectionLabel}>Job description</span>
+        <div className={styles.resumeScroller}>
+          <ResumePage
+            resume={editor.currentResume}
+            template={editor.activeTemplate}
+            onUpdatePersonalInfo={editor.updatePersonalInfo}
+            onUpdateSummary={editor.updateSummary}
+            onUpdateExperience={editor.updateExperience}
+            onUpdateBullet={editor.updateBullet}
+            onUpdateEducation={editor.updateEducation}
+            onUpdateSkillGroup={editor.updateSkillGroup}
+            onFitChange={editor.setFitResult}
+            highlightedBulletIds={highlightedBulletIds}
+            scale={displayScale}
+          />
+        </div>
+
+        {editor.isTailoring && (
+          <div className={styles.loadingOverlay}>
+            <div className={styles.loadingCard}>
+              <span className={styles.spinner} />
+              <p>Comparing the job description with your resume…</p>
+              <p className={styles.mockLabel}>Mock mode · connect Claude API for real results</p>
+            </div>
           </div>
+        )}
+      </main>
+
+      {/* ── Drawers ───────────────────────────────────────────────── */}
+      {openDrawer === 'jd' && (
+        <Drawer title="Job description" onClose={() => setOpenDrawer(null)}>
           <JDPanel
             jobDescription={editor.jobDescription}
             targetCompany={editor.targetCompany}
@@ -98,62 +154,21 @@ export default function App() {
               editor.setTailoringOptions((prev) => ({ ...prev, ...opts }))
             }
             onAnalyze={editor.analyzeJD}
-            onTailor={editor.runTailoring}
+            onTailor={() => { editor.runTailoring(); setOpenDrawer('changes'); }}
             originalResume={editor.originalResume}
             onAddChange={editor.addChange}
           />
-        </aside>
+        </Drawer>
+      )}
 
-        <div
-          className={`${styles.editorArea} ${editor.activeView !== 'editor' ? styles.hiddenMobile : ''}`}
-        >
-          <div className={styles.metaStrip} data-print="hide">
-            <span className={styles.metaItem}>
-              RESUME{editor.targetCompany ? ` / ${editor.targetCompany.toUpperCase()}` : ''}
-            </span>
-            <span className={styles.metaDivider} />
-            <span className={styles.metaItem}>01 PAGE</span>
-            <span className={styles.metaDivider} />
-            <span className={`${styles.metaFit} ${fitOk ? styles.metaFitOk : styles.metaFitWarn}`}>
-              {editor.fitResult.fits ? '100%' : `${fitPct}%`} FIT
-            </span>
-          </div>
+      {openDrawer === 'paste' && (
+        <Drawer title="Paste text" onClose={() => setOpenDrawer(null)}>
+          <PasteImport resume={editor.originalResume} onAddChange={editor.addChange} />
+        </Drawer>
+      )}
 
-          <div className={styles.resumeScroller}>
-            <ResumePage
-              resume={editor.currentResume}
-              template={editor.activeTemplate}
-              onUpdatePersonalInfo={editor.updatePersonalInfo}
-              onUpdateSummary={editor.updateSummary}
-              onUpdateExperience={editor.updateExperience}
-              onUpdateBullet={editor.updateBullet}
-              onUpdateEducation={editor.updateEducation}
-              onUpdateSkillGroup={editor.updateSkillGroup}
-              onFitChange={editor.setFitResult}
-              highlightedBulletIds={highlightedBulletIds}
-              scale={displayScale}
-            />
-          </div>
-
-          {editor.isTailoring && (
-            <div className={styles.loadingOverlay}>
-              <div className={styles.loadingCard}>
-                <span className={styles.spinner} />
-                <p>Comparing the job description with your resume…</p>
-                <p className={styles.mockLabel}>Mock mode · connect Claude API for real results</p>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <aside
-          className={`${styles.sidePanel} ${styles.panelRight} ${editor.activeView !== 'review' ? styles.hiddenMobile : ''}`}
-          data-print="hide"
-        >
-          <div className={styles.sectionMark}>
-            <span className={styles.sectionNum}>02</span>
-            <span className={styles.sectionLabel}>Suggested changes</span>
-          </div>
+      {openDrawer === 'changes' && (
+        <Drawer title="Suggested changes" onClose={() => setOpenDrawer(null)}>
           <ReviewPanel
             proposedChanges={editor.proposedChanges}
             warnings={editor.warnings}
@@ -166,8 +181,8 @@ export default function App() {
             onRejectAll={editor.rejectAll}
             onRestoreOriginal={editor.restoreOriginal}
           />
-        </aside>
-      </main>
+        </Drawer>
+      )}
     </div>
   );
 }

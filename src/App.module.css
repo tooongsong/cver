@@ -9,48 +9,28 @@
   color: var(--ink);
 }
 
-/* ── Top bar — three-column editorial grid ───────────────────────── */
-.topBar {
-  display: grid;
-  grid-template-columns: 280px minmax(0, 1fr) auto;
+/* ── Toolbar ─────────────────────────────────────────────────────── */
+.toolbar {
+  display: flex;
   align-items: center;
   height: 52px;
   min-height: 52px;
   background: var(--surface);
   border-bottom: 1px solid var(--line);
   flex-shrink: 0;
+  gap: 0;
+  overflow: hidden;
 }
 
-.topBarLeft {
+.toolbarBrand {
   display: flex;
   align-items: center;
   padding: 0 20px;
   border-right: 1px solid var(--line);
   height: 100%;
-  gap: 8px;
-  overflow: hidden;
-}
-
-.topBarCenter {
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-  gap: 10px;
-  min-width: 0;
-  overflow: hidden;
-}
-
-.topBarRight {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 20px;
-  border-left: 1px solid var(--line);
-  height: 100%;
   flex-shrink: 0;
 }
 
-/* ── Logo / wordmark ─────────────────────────────────────────────── */
 .logo {
   display: flex;
   align-items: center;
@@ -60,7 +40,6 @@
   color: var(--ink);
   letter-spacing: -0.03em;
   white-space: nowrap;
-  flex-shrink: 0;
 }
 
 .logoMark {
@@ -69,158 +48,143 @@
   line-height: 1;
 }
 
-.tagline {
-  font-size: 11px;
-  color: var(--ink-muted);
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  flex-shrink: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.mockBadge {
-  font-size: 10px;
-  font-weight: 500;
-  color: var(--ink-muted);
-  border: 1px solid var(--line);
-  padding: 2px 8px;
-  border-radius: var(--radius-pill);
-  white-space: nowrap;
+/* Primary action group */
+.toolbarActions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 12px;
   flex-shrink: 0;
-  letter-spacing: 0.03em;
+  border-right: 1px solid var(--line);
+  height: 100%;
 }
 
-/* ── Mobile tabs ─────────────────────────────────────────────────── */
-.mobileTabs {
-  display: none;
-  background: var(--surface);
-  border-bottom: 1px solid var(--line);
-  flex-shrink: 0;
-}
-
-.mobileTab {
-  flex: 1;
+.toolBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font: inherit;
   font-size: 12.5px;
   font-weight: 500;
-  padding: 12px 0;
-  border: none;
-  background: none;
-  color: var(--ink-muted);
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: var(--radius-control);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ink-secondary);
   cursor: pointer;
-  border-bottom: 2px solid transparent;
   transition: all var(--transition);
   white-space: nowrap;
+  flex-shrink: 0;
 }
-
-.mobileTabActive {
+.toolBtn:hover:not(:disabled) {
+  background: var(--surface-soft);
   color: var(--ink);
-  font-weight: 700;
-  border-bottom-color: var(--accent);
 }
-
-/* ── Workspace grid ──────────────────────────────────────────────── */
-.workspace {
-  display: grid;
-  grid-template-columns: minmax(280px, 320px) minmax(650px, 1fr) minmax(350px, 400px);
-  flex: 1;
-  overflow: hidden;
-  min-width: 0;
-}
-
-.sidePanel {
-  overflow-y: auto;
-  overflow-x: hidden;
-  background: var(--surface);
-  min-width: 0;
-  min-height: 0;
-}
-
-.panelLeft {
-  border-right: 1px solid var(--line);
-  padding: 20px 18px;
-}
-
-.panelRight {
-  border-left: 1px solid var(--line);
-  padding: 20px 18px;
-}
-
-/* ── Panel section marker ────────────────────────────────────────── */
-.sectionMark {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.sectionNum {
-  font-size: 10px;
-  font-weight: 700;
+.toolBtnActive {
+  background: var(--accent-soft);
   color: var(--accent);
-  letter-spacing: 0.1em;
-  font-variant-numeric: tabular-nums;
+  border-color: var(--accent-border);
 }
-
-.sectionLabel {
-  font-size: 9.5px;
-  font-weight: 600;
+.toolBtnActive:hover {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+}
+.toolBtnDisabled {
   color: var(--ink-muted);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  cursor: not-allowed;
 }
 
-/* ── Center editor ───────────────────────────────────────────────── */
-.editorArea {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  position: relative;
-  background: var(--canvas);
-  min-width: 0;
-  min-height: 0;
+.toolBtnSpinner {
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid var(--accent-soft);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
 }
 
-/* ── Metadata strip ──────────────────────────────────────────────── */
-.metaStrip {
+/* Fit status — center spacer */
+.toolbarStatus {
+  flex: 1;
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 0 24px;
-  height: 34px;
-  min-height: 34px;
-  border-bottom: 1px solid var(--line);
-  background: var(--canvas);
+  padding: 0 16px;
+  justify-content: center;
+  min-width: 0;
+}
+
+.fitStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+.fitStatus:disabled { cursor: default; }
+
+.fitOk {
+  color: var(--accent);
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+}
+.fitOk:hover:not(:disabled) { background: #d5dbff; }
+
+.fitWarn {
+  color: var(--warning);
+  border-color: rgba(145, 105, 26, 0.25);
+  background: var(--warning-soft);
+}
+.fitWarn:hover:not(:disabled) { background: #f5e5b0; }
+
+.fitDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
   flex-shrink: 0;
 }
 
-.metaItem {
-  font-size: 9.5px;
-  font-weight: 600;
-  color: var(--ink-muted);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  white-space: nowrap;
+.changesBadge {
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.02em;
 }
 
-.metaDivider {
-  width: 1px;
-  height: 12px;
-  background: var(--line);
+/* Right controls */
+.toolbarRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  border-left: 1px solid var(--line);
+  height: 100%;
   flex-shrink: 0;
 }
 
-.metaFit {
-  font-size: 9.5px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  white-space: nowrap;
+/* ── Workspace — resume is the whole view ────────────────────────── */
+.workspace {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
 }
-
-.metaFitOk { color: var(--success); }
-.metaFitWarn { color: var(--ink-muted); }
 
 .resumeScroller {
   flex: 1;
@@ -228,7 +192,8 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 36px 32px;
+  padding: 48px 40px;
+  background: var(--canvas);
 }
 
 /* ── Loading overlay ─────────────────────────────────────────────── */
@@ -284,55 +249,20 @@
   to { transform: rotate(360deg); }
 }
 
-/* ── Responsive: 1180–1439px — tighter three panels ─────────────── */
-@media (max-width: 1439px) {
-  .workspace {
-    grid-template-columns: minmax(250px, 280px) minmax(0, 1fr) minmax(330px, 370px);
-  }
-  .topBar {
-    grid-template-columns: 250px minmax(0, 1fr) auto;
-  }
-  .tagline { display: none; }
+/* ── Responsive: narrow screen — hide some toolbar items ─────────── */
+@media (max-width: 1023px) {
+  .toolbarActions { gap: 0; }
+  .toolBtn { padding: 0 10px; font-size: 12px; }
+  .resumeScroller { padding: 32px 24px; }
 }
 
-/* ── Responsive: 768–1179px — tabs ──────────────────────────────── */
-@media (max-width: 1179px) {
-  .workspace { grid-template-columns: 1fr; }
-  .mobileTabs { display: flex; }
-  .hiddenMobile { display: none; }
-  .sidePanel {
-    border-right: none;
-    border-left: none;
-    padding: 16px;
-  }
-  .topBar {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    height: 48px;
-    min-height: 48px;
-  }
-  .topBarLeft {
-    padding: 0 16px;
-    border-right: none;
-  }
-  .topBarCenter { display: none; }
-  .topBarRight {
-    padding: 0 16px;
-    border-left: none;
-  }
-  .metaStrip { padding: 0 16px; gap: 12px; }
-}
-
-/* ── Responsive: mobile <768px ───────────────────────────────────── */
 @media (max-width: 767px) {
-  .topBar {
-    grid-template-columns: auto 1fr auto;
-    height: 44px;
-    min-height: 44px;
-  }
-  .topBarLeft { padding: 0 12px; }
-  .topBarRight { padding: 0 12px; gap: 6px; }
+  .toolbar { height: 48px; min-height: 48px; }
+  .toolbarBrand { padding: 0 14px; }
   .logo { font-size: 14px; }
-  .mockBadge { display: none; }
+  .toolbarActions { padding: 0 8px; }
+  .toolbarStatus { padding: 0 8px; }
+  .toolbarRight { padding: 0 10px; gap: 6px; }
   .resumeScroller { padding: 20px 12px; }
-  .metaStrip { height: 30px; min-height: 30px; padding: 0 12px; gap: 10px; }
+  .fitStatus { font-size: 11px; padding: 4px 10px; }
 }
