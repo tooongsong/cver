@@ -60,32 +60,34 @@ export function DiffViewer({ before, after, compact = false }: Props) {
   }
 
   return (
-    <div className={`${styles.diff} ${compact ? styles.compact : ''}`}>
-      <div className={styles.side}>
-        <span className={styles.label} aria-label="Original text">Original</span>
-        <p className={styles.text}>
-          {beforeSegs.map((seg, i) => (
-            <span
-              key={i}
-              className={seg.type === 'removed' ? styles.removed : styles.unchanged}
-            >
-              {seg.text}
-            </span>
-          ))}
-        </p>
-      </div>
-      <div className={styles.side}>
-        <span className={styles.label} aria-label="Proposed text">Proposed</span>
-        <p className={styles.text}>
-          {afterSegs.map((seg, i) => (
-            <span
-              key={i}
-              className={seg.type === 'added' ? styles.added : styles.unchanged}
-            >
-              {seg.text}
-            </span>
-          ))}
-        </p>
+    <div className={styles.container}>
+      <div className={`${styles.diff} ${compact ? styles.compact : ''}`}>
+        <div className={styles.side}>
+          <span className={styles.label} aria-label="Original text">Original</span>
+          <p className={styles.text}>
+            {beforeSegs.map((seg, i) => (
+              <span
+                key={i}
+                className={seg.type === 'removed' ? styles.removed : styles.unchanged}
+              >
+                {seg.text}
+              </span>
+            ))}
+          </p>
+        </div>
+        <div className={styles.side}>
+          <span className={styles.label} aria-label="Proposed text">Proposed</span>
+          <p className={styles.text}>
+            {afterSegs.map((seg, i) => (
+              <span
+                key={i}
+                className={seg.type === 'added' ? styles.added : styles.unchanged}
+              >
+                {seg.text}
+              </span>
+            ))}
+          </p>
+        </div>
       </div>
     </div>
   );

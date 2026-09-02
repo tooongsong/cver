@@ -23,7 +23,7 @@ export default function App() {
     <div className={styles.app}>
       <header className={styles.topBar} data-print="hide">
         <div className={styles.topBarLeft}>
-          <span className={styles.logo}>Resume Tailor</span>
+          <span className={styles.logo}>cver</span>
           <span className={styles.mockBadge}>Mock AI</span>
         </div>
         <div className={styles.topBarRight}>

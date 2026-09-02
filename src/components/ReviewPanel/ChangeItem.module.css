@@ -1,36 +1,42 @@
 .item {
-  border: 1.5px solid var(--border-light);
-  border-radius: var(--radius);
-  background: white;
-  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
   box-shadow: var(--shadow-card);
+  min-width: 0;
+  width: 100%;
+  overflow-wrap: anywhere;
 }
 
-.risk_blocked { border-left: 3px solid var(--ai-remove-text); }
+.risk_blocked { border-left: 3px solid var(--danger); }
 .risk_review  { border-left: 3px solid var(--accent); }
-.risk_safe    { border-left: 3px solid var(--ai-add-text); }
-.status_rejected { opacity: 0.55; }
+.risk_safe    { border-left: 3px solid var(--success); }
+.status_rejected { opacity: 0.5; }
 
 .headerBtn {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 9px 11px;
+  padding: 11px 13px;
   background: none;
   border: none;
   cursor: pointer;
   text-align: left;
   gap: 8px;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  transition: background var(--transition);
+  min-width: 0;
 }
-.headerBtn:hover { background: rgba(0,0,0,0.02); }
+.headerBtn:hover { background: var(--surface-soft); }
 
 .headerLeft {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   flex: 1;
   min-width: 0;
+  overflow: hidden;
 }
 
 .riskDot {
@@ -39,28 +45,31 @@
   border-radius: 50%;
   flex-shrink: 0;
 }
-.dot_safe    { background: var(--ai-add-text); }
-.dot_review  { background: var(--accent); }
-.dot_blocked { background: var(--ai-remove-text); }
+.dot_safe    { background: var(--success); }
+.dot_review  { background: var(--accent-hover); }
+.dot_blocked { background: var(--danger); }
 
 .fieldLabel {
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--ink);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   letter-spacing: -0.01em;
+  flex: 1;
+  min-width: 0;
 }
 
 .typeChip {
   font-size: 10px;
   font-weight: 500;
-  background: var(--bg);
-  color: var(--text-muted);
-  padding: 2px 7px;
+  background: var(--canvas);
+  color: var(--ink-muted);
+  padding: 3px 8px;
   border-radius: var(--radius-pill);
   flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .headerRight {
@@ -73,125 +82,160 @@
 .statusChip {
   font-size: 10px;
   font-weight: 600;
-  padding: 2px 8px;
+  padding: 3px 9px;
   border-radius: var(--radius-pill);
+  white-space: nowrap;
 }
-.statusChip_pending  { background: #f0f0ee; color: var(--text-secondary); }
-.statusChip_accepted { background: var(--ai-add-bg); color: var(--ai-add-text); }
-.statusChip_rejected { background: var(--ai-remove-bg); color: var(--ai-remove-text); }
-.statusChip_edited   { background: var(--accent-light); color: var(--accent-hover); }
+.statusChip_pending  { background: var(--canvas); color: var(--ink-secondary); }
+.statusChip_accepted { background: var(--success-soft); color: var(--success); }
+.statusChip_rejected { background: var(--danger-soft); color: var(--danger); }
+.statusChip_edited   { background: var(--accent-soft); color: var(--warning); }
 
-.chevron { font-size: 9px; color: var(--text-muted); }
+.chevron { font-size: 9px; color: var(--ink-muted); flex-shrink: 0; }
 
 .body {
-  padding: 0 11px 11px;
+  padding: 0 13px 13px;
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 10px;
+  min-width: 0;
 }
 
 .riskBanner {
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 600;
-  padding: 5px 9px;
+  padding: 7px 10px;
   border-radius: var(--radius-sm);
   margin: 0;
+  overflow-wrap: anywhere;
 }
-.riskBanner_review  { background: var(--risk-review-bg); color: #7a5500; }
-.riskBanner_blocked { background: var(--risk-blocked-bg); color: var(--ai-remove-text); }
+.riskBanner_review  {
+  background: var(--warning-soft);
+  color: var(--warning);
+  border: 1px solid rgba(138, 100, 24, 0.2);
+}
+.riskBanner_blocked {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border: 1px solid var(--ai-remove-border);
+}
 
 .reason {
-  font-size: 11.5px;
-  color: var(--text-secondary);
+  font-size: 12px;
+  color: var(--ink-secondary);
   margin: 0;
   line-height: 1.55;
+  overflow-wrap: anywhere;
 }
 
-.evidenceGroup { display: flex; flex-direction: column; gap: 3px; }
+.evidenceGroup { display: flex; flex-direction: column; gap: 4px; }
 
 .evidenceLabel {
   font-size: 9.5px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
   margin: 0;
 }
 
 .evidenceText {
-  font-size: 11px;
-  color: var(--text-secondary);
+  font-size: 11.5px;
+  color: var(--ink-secondary);
   font-style: italic;
   margin: 0;
-  padding-left: 8px;
-  border-left: 2px solid var(--border);
+  padding-left: 10px;
+  border-left: 2px solid var(--line);
+  overflow-wrap: anywhere;
+  line-height: 1.45;
 }
 
-.editArea { display: flex; flex-direction: column; gap: 7px; }
+.editArea { display: flex; flex-direction: column; gap: 8px; }
 
 .editTextarea {
   font: inherit;
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.55;
-  padding: 7px 9px;
+  padding: 9px 11px;
   border: 1.5px solid var(--accent);
-  border-radius: var(--radius);
+  border-radius: var(--radius-md);
   resize: vertical;
   outline: none;
-  color: var(--text-primary);
-  background: white;
+  color: var(--ink);
+  background: var(--surface);
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
-.editActions { display: flex; gap: 6px; }
+.editActions { display: flex; gap: 7px; flex-wrap: wrap; }
 
 .actions {
   display: flex;
-  gap: 6px;
+  gap: 7px;
   flex-wrap: wrap;
+  min-width: 0;
 }
 
-.btnAccept, .btnReject, .btnEdit, .btnUndo,
-.btnSave, .btnCancel {
+.btnAccept,
+.btnReject,
+.btnEdit,
+.btnUndo,
+.btnSave,
+.btnCancel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font: inherit;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 600;
-  padding: 5px 11px;
-  border-radius: var(--radius);
+  min-height: 36px;
+  padding: 0 13px;
+  border-radius: var(--radius-md);
   border: 1.5px solid transparent;
   cursor: pointer;
-  transition: all var(--transition);
-  letter-spacing: -0.01em;
+  transition: all var(--transition), transform 80ms ease;
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
+.btnAccept:active,
+.btnReject:active,
+.btnEdit:active { transform: translateY(1px); }
 
 .btnAccept {
-  background: var(--text-primary);
-  color: white;
-  border-color: var(--text-primary);
+  background: var(--ink);
+  color: var(--surface);
+  border-color: var(--ink);
 }
 .btnAccept:hover:not(:disabled) { background: #333; border-color: #333; }
 .btnAccept:disabled { opacity: 0.3; cursor: not-allowed; }
 
 .btnReject {
-  background: white;
-  color: var(--ai-remove-text);
+  background: var(--surface);
+  color: var(--danger);
   border-color: var(--ai-remove-border);
 }
-.btnReject:hover { background: var(--ai-remove-bg); }
+.btnReject:hover { background: var(--danger-soft); }
 
-.btnEdit, .btnUndo, .btnCancel {
-  background: var(--bg);
-  color: var(--text-secondary);
-  border-color: var(--border);
+.btnEdit,
+.btnUndo,
+.btnCancel {
+  background: var(--surface);
+  color: var(--ink-secondary);
+  border-color: var(--line);
 }
-.btnEdit:hover, .btnUndo:hover, .btnCancel:hover {
+.btnEdit:hover,
+.btnUndo:hover,
+.btnCancel:hover {
   border-color: var(--accent);
-  color: var(--accent-hover);
-  background: var(--accent-light);
+  color: var(--ink);
+  background: var(--accent-soft);
 }
 
 .btnSave {
-  background: var(--ai-add-bg);
-  color: var(--ai-add-text);
+  background: var(--success-soft);
+  color: var(--success);
   border-color: var(--ai-add-border);
 }
-.btnSave:hover { background: #d8f0e4; }
+.btnSave:hover { background: #d0ede0; }

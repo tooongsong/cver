@@ -1,56 +1,69 @@
 :root {
-  /* ── Backgrounds ─────────────────────── */
-  --bg: #f5f5f0;          /* warm off-white canvas */
-  --bg-panel: #ffffff;
-  --paper: #ffffff;
+  /* ── Core design tokens ──────────────────── */
+  --canvas: #e8e8e6;
+  --surface: #ffffff;
+  --surface-soft: #f5f5f2;
+  --ink: #171717;
+  --ink-secondary: #5f5f5b;
+  --ink-muted: #92928c;
+  --line: #d4d4cf;
+  --line-strong: #222222;
 
-  /* ── Text ────────────────────────────── */
-  --text-primary: #111111;
-  --text-secondary: #555555;
-  --text-muted: #999999;
+  --accent: #f2c238;
+  --accent-hover: #e7b62a;
+  --accent-soft: #fff7da;
+  --accent-border: rgba(242, 194, 56, 0.35);
 
-  /* ── Accent: warm yellow (Saturnbird-style) ── */
-  --accent: #E8A020;
-  --accent-hover: #CC8C18;
-  --accent-light: #FEF3DC;
-  --accent-border: rgba(232, 160, 32, 0.35);
+  --success: #2f7651;
+  --success-soft: #edf7f1;
+  --danger: #b64b43;
+  --danger-soft: #fff0ee;
+  --warning: #8a6418;
+  --warning-soft: #fff7df;
 
-  /* ── AI diff colors ──────────────────── */
-  --ai-add-bg: #EDFAF3;
-  --ai-add-text: #1a5c38;
-  --ai-add-border: #b2dfc6;
-
-  --ai-remove-bg: #FEF0EF;
-  --ai-remove-text: #8a2424;
-  --ai-remove-border: #f0bfbf;
-
-  --ai-keyword-bg: #FEF3DC;
-  --ai-keyword-text: #7a4a00;
-
-  /* ── Risk ────────────────────────────── */
-  --risk-blocked-bg: #FEF0EF;
-  --risk-review-bg: #FFFAEB;
-
-  /* ── Borders ─────────────────────────── */
-  --border: #e8e8e4;
-  --border-light: #f0f0ec;
-
-  /* ── Shape ───────────────────────────── */
-  --radius-sm: 6px;
-  --radius: 10px;
-  --radius-lg: 16px;
+  /* ── Shape ───────────────────────────────── */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
   --radius-pill: 999px;
 
-  /* ── Shadows ─────────────────────────── */
-  --shadow-paper: 0 4px 24px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.04);
-  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
+  /* ── Shadows ─────────────────────────────── */
+  --shadow-paper: 0 16px 40px rgba(30, 30, 25, 0.10);
+  --shadow-card: 0 4px 14px rgba(30, 30, 25, 0.06);
   --shadow-dropdown: 0 16px 40px rgba(0, 0, 0, 0.12);
 
-  /* ── Type ────────────────────────────── */
-  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-resume: 'Inter', 'Calibri', Arial, sans-serif;
+  /* ── Backward-compat aliases (all components reference these) ── */
+  --bg: var(--canvas);
+  --bg-panel: var(--surface);
+  --paper: var(--surface);
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink-secondary);
+  --text-muted: var(--ink-muted);
+  --border: var(--line);
+  --border-light: #e0e0db;
+  --radius: var(--radius-md);
 
-  --transition: 140ms ease;
+  /* ── AI diff colors (semantic) ───────────── */
+  --ai-add-bg: var(--success-soft);
+  --ai-add-text: var(--success);
+  --ai-add-border: #b2dfc6;
+  --ai-remove-bg: var(--danger-soft);
+  --ai-remove-text: var(--danger);
+  --ai-remove-border: #f0bfbf;
+  --ai-keyword-bg: var(--accent-soft);
+  --ai-keyword-text: var(--warning);
+
+  /* ── Risk ────────────────────────────────── */
+  --risk-blocked-bg: var(--danger-soft);
+  --risk-review-bg: var(--warning-soft);
+  --accent-light: var(--accent-soft);
+
+  /* ── Typography ──────────────────────────── */
+  --font-ui: Inter, 'SF Pro Display', 'SF Pro Text', -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-resume: Inter, 'Calibri', Arial, sans-serif;
+
+  --transition: 150ms ease;
 
   /* ── Resume layout (overridden per template) ── */
   --resume-margin: 0.55in;

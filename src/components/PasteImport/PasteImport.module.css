@@ -1,157 +1,180 @@
 .wrapper {
   border-top: 1px solid var(--border-light);
-  padding-top: 12px;
+  padding-top: 14px;
 }
 
 .trigger {
   font: inherit;
   font-size: 12px;
   font-weight: 600;
-  padding: 7px 12px;
+  min-height: 38px;
+  padding: 0 14px;
   width: 100%;
-  border-radius: var(--radius);
-  border: 1.5px dashed var(--border);
+  border-radius: var(--radius-md);
+  border: 1.5px dashed var(--line);
   background: transparent;
-  color: var(--text-secondary);
+  color: var(--ink-secondary);
   cursor: pointer;
   transition: all var(--transition);
   text-align: center;
-  letter-spacing: -0.01em;
+  white-space: nowrap;
 }
-
 .trigger:hover {
   border-color: var(--accent);
-  color: var(--accent-hover);
-  background: var(--accent-light);
+  color: var(--ink);
+  background: var(--accent-soft);
 }
 
 .panel {
-  margin-top: 10px;
+  margin-top: 12px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
+  min-width: 0;
 }
 
 .hint {
-  font-size: 11.5px;
-  color: var(--text-secondary);
+  font-size: 12px;
+  color: var(--ink-secondary);
   line-height: 1.55;
   margin: 0;
 }
 
 .textarea {
   font: inherit;
-  font-size: 12px;
+  font-size: 12.5px;
   line-height: 1.55;
-  padding: 10px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--bg);
-  color: var(--text-primary);
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-soft);
+  color: var(--ink);
   resize: vertical;
   outline: none;
   width: 100%;
   box-sizing: border-box;
-  transition: border-color var(--transition);
+  transition: border-color var(--transition), background var(--transition);
+  min-width: 0;
 }
-
 .textarea:focus {
   border-color: var(--accent);
-  background: white;
+  background: var(--surface);
 }
 
 .btnMatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font: inherit;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 700;
-  padding: 9px 14px;
-  border-radius: var(--radius);
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: var(--radius-md);
   border: none;
-  background: var(--text-primary);
-  color: white;
+  background: var(--ink);
+  color: var(--surface);
   cursor: pointer;
-  transition: background var(--transition);
-  letter-spacing: -0.01em;
+  transition: background var(--transition), transform 80ms ease;
+  white-space: nowrap;
+  width: 100%;
 }
 .btnMatch:hover:not(:disabled) { background: #333; }
+.btnMatch:active:not(:disabled) { transform: translateY(1px); }
 .btnMatch:disabled { opacity: 0.35; cursor: not-allowed; }
 
 .result {
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
   overflow: hidden;
-  background: white;
+  background: var(--surface);
+  min-width: 0;
 }
 
 .resultHeader {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 10px;
+  padding: 10px 12px;
   border-bottom: 1px solid var(--border-light);
+  flex-wrap: wrap;
 }
 
 .confidence {
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
-  padding: 2px 8px;
+  padding: 3px 9px;
   border-radius: var(--radius-pill);
+  white-space: nowrap;
 }
 
 .matchedField {
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--ink-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .actions {
   display: flex;
-  gap: 6px;
-  padding: 8px 10px;
+  gap: 7px;
+  padding: 10px 12px;
   border-top: 1px solid var(--border-light);
+  flex-wrap: wrap;
 }
 
 .btnApply {
+  display: inline-flex;
+  align-items: center;
   font: inherit;
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 700;
-  padding: 6px 12px;
-  border-radius: var(--radius);
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: var(--radius-md);
   border: none;
-  background: var(--text-primary);
-  color: white;
+  background: var(--ink);
+  color: var(--surface);
   cursor: pointer;
   transition: background var(--transition);
+  white-space: nowrap;
 }
 .btnApply:hover { background: #333; }
 
 .btnDiscard {
+  display: inline-flex;
+  align-items: center;
   font: inherit;
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 500;
-  padding: 6px 12px;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--border);
-  background: white;
-  color: var(--text-secondary);
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-secondary);
   cursor: pointer;
   transition: all var(--transition);
+  white-space: nowrap;
 }
-.btnDiscard:hover { border-color: var(--ai-remove-border); color: var(--ai-remove-text); }
+.btnDiscard:hover { border-color: var(--danger); color: var(--danger); }
 
 .noMatch {
-  font-size: 11.5px;
-  color: var(--text-muted);
+  font-size: 12px;
+  color: var(--ink-muted);
   margin: 0;
   font-style: italic;
 }
 
 .success {
-  font-size: 11.5px;
-  color: var(--ai-add-text);
+  font-size: 12px;
+  color: var(--success);
   font-weight: 600;
   margin: 0;
-  background: var(--ai-add-bg);
-  padding: 7px 10px;
-  border-radius: var(--radius-sm);
+  background: var(--success-soft);
+  padding: 9px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--ai-add-border);
 }

@@ -1,47 +1,56 @@
+/* ── Shell ───────────────────────────────────────────────────────── */
 .app {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   font-family: var(--font-ui);
-  background: var(--bg);
-  color: var(--text-primary);
+  background: var(--canvas);
+  color: var(--ink);
 }
 
-/* ── Top bar ──────────────────────────────────────────────────── */
+/* ── Top bar ─────────────────────────────────────────────────────── */
 .topBar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  height: 52px;
-  background: var(--bg-panel);
-  border-bottom: 1px solid var(--border);
+  height: 60px;
+  min-height: 60px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
   flex-shrink: 0;
   gap: 12px;
+  min-width: 0;
 }
 
 .topBarLeft {
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .logo {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: -0.02em;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .mockBadge {
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 600;
-  color: var(--accent-hover);
-  background: var(--accent-light);
-  border: 1px solid var(--accent-border);
-  padding: 2px 9px;
+  color: var(--warning);
+  background: var(--warning-soft);
+  border: 1px solid rgba(138, 100, 24, 0.2);
+  padding: 3px 10px;
   border-radius: var(--radius-pill);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .topBarRight {
@@ -51,61 +60,71 @@
   flex-shrink: 0;
 }
 
-/* ── Mobile tabs ─────────────────────────────────────────────── */
+/* ── Mobile tabs ─────────────────────────────────────────────────── */
 .mobileTabs {
   display: none;
-  background: var(--bg-panel);
-  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
   flex-shrink: 0;
 }
 
 .mobileTab {
   flex: 1;
   font: inherit;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
-  padding: 11px 0;
+  padding: 13px 0;
   border: none;
   background: none;
-  color: var(--text-secondary);
+  color: var(--ink-muted);
   cursor: pointer;
   border-bottom: 2px solid transparent;
   transition: all var(--transition);
+  white-space: nowrap;
 }
 
 .mobileTabActive {
-  color: var(--text-primary);
+  color: var(--ink);
+  font-weight: 600;
   border-bottom-color: var(--accent);
 }
 
-/* ── Workspace ───────────────────────────────────────────────── */
+/* ── Workspace grid ──────────────────────────────────────────────── */
 .workspace {
   display: grid;
-  grid-template-columns: 290px 1fr 308px;
+  grid-template-columns: minmax(270px, 310px) minmax(0, 1fr) minmax(350px, 400px);
   flex: 1;
   overflow: hidden;
+  min-width: 0;
 }
 
 .sidePanel {
-  padding: 16px 14px;
   overflow-y: auto;
-  background: var(--bg-panel);
+  overflow-x: hidden;
+  background: var(--surface);
+  min-width: 0;
+  min-height: 0;
 }
 
 .panelLeft {
-  border-right: 1px solid var(--border);
+  border-right: 1px solid var(--line);
+  padding: 20px 18px;
 }
 
 .panelRight {
-  border-left: 1px solid var(--border);
+  border-left: 1px solid var(--line);
+  padding: 20px 18px;
 }
 
+/* ── Center editor ───────────────────────────────────────────────── */
 .editorArea {
   display: flex;
   flex-direction: column;
   overflow: hidden;
   position: relative;
-  background: var(--bg);
+  background: var(--canvas);
+  min-width: 0;
+  min-height: 0;
 }
 
 .resumeScroller {
@@ -114,14 +133,14 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 36px 28px;
+  padding: 40px 32px;
 }
 
-/* ── Loading overlay ─────────────────────────────────────────── */
+/* ── Loading overlay ─────────────────────────────────────────────── */
 .loadingOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(245, 245, 240, 0.82);
+  background: rgba(232, 232, 230, 0.80);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -130,8 +149,8 @@
 }
 
 .loadingCard {
-  background: white;
-  border: 1px solid var(--border);
+  background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   padding: 28px 32px;
   display: flex;
@@ -147,20 +166,20 @@
   margin: 0;
   font-size: 13px;
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--ink);
   line-height: 1.5;
 }
 
 .mockLabel {
   font-size: 11px !important;
   font-weight: 400 !important;
-  color: var(--text-muted) !important;
+  color: var(--ink-muted) !important;
 }
 
 .spinner {
-  width: 30px;
-  height: 30px;
-  border: 2.5px solid var(--border);
+  width: 28px;
+  height: 28px;
+  border: 2.5px solid var(--line);
   border-top-color: var(--accent);
   border-radius: 50%;
   animation: spin 0.75s linear infinite;
@@ -170,10 +189,46 @@
   to { transform: rotate(360deg); }
 }
 
-/* ── Responsive ──────────────────────────────────────────────── */
-@media (max-width: 900px) {
-  .workspace { grid-template-columns: 1fr; }
+/* ── Responsive: standard laptop 1180–1439px ─────────────────────── */
+@media (max-width: 1439px) {
+  .workspace {
+    grid-template-columns: minmax(250px, 280px) minmax(0, 1fr) minmax(340px, 380px);
+  }
+}
+
+/* ── Responsive: small laptop / tablet 1024–1179px ──────────────── */
+@media (max-width: 1179px) {
+  .workspace {
+    grid-template-columns: minmax(240px, 260px) minmax(0, 1fr) minmax(320px, 360px);
+  }
+  .panelLeft { padding: 16px 14px; }
+  .panelRight { padding: 16px 14px; }
+}
+
+/* ── Responsive: narrow / tablet below 1024px ───────────────────── */
+@media (max-width: 1023px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
   .mobileTabs { display: flex; }
   .hiddenMobile { display: none; }
-  .sidePanel { border-right: none; border-left: none; }
+  .sidePanel {
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid var(--line);
+    padding: 16px;
+  }
+  .topBar { padding: 0 16px; height: 56px; min-height: 56px; }
+}
+
+/* ── Responsive: mobile below 760px ─────────────────────────────── */
+@media (max-width: 759px) {
+  .topBar {
+    padding: 0 12px;
+    height: 52px;
+    min-height: 52px;
+  }
+  .logo { font-size: 14px; }
+  .topBarRight { gap: 6px; }
+  .resumeScroller { padding: 20px 12px; }
 }
