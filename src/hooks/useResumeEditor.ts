@@ -120,6 +120,7 @@ export function useResumeEditor() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [fitResult, setFitResult] = useState<FitResult>(EMPTY_FIT);
   const [activeView, setActiveView] = useState<'jd' | 'editor' | 'review'>('editor');
+  const [importedStyleOverrides, setImportedStyleOverrides] = useState<Record<string, string>>({});
   const [activeTemplate, setActiveTemplate] = useState<ResumeTemplate>(
     getTemplate(localStorage.getItem('resume-template-id') ?? DEFAULT_TEMPLATE_ID)
   );
@@ -325,12 +326,13 @@ export function useResumeEditor() {
 
   // ── Import ─────────────────────────────────────────────────────────
 
-  const loadNewResume = useCallback((resume: ResumeData) => {
+  const loadNewResume = useCallback((resume: ResumeData, styleOverrides: Record<string, string> = {}) => {
     setOriginalResume(deepClone(resume));
     setCurrentResume(deepClone(resume));
     setProposedChanges([]);
     setWarnings([]);
     setJdAnalysis(null);
+    setImportedStyleOverrides(styleOverrides);
   }, []);
 
   // ── Version history ────────────────────────────────────────────────
@@ -401,6 +403,7 @@ export function useResumeEditor() {
     // State
     originalResume,
     currentResume,
+    importedStyleOverrides,
     jobDescription,
     targetCompany,
     targetRole,

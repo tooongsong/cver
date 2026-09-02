@@ -8,9 +8,10 @@ import { VersionSwitcher } from './components/VersionSwitcher/VersionSwitcher';
 import { ExportControls } from './components/ExportControls/ExportControls';
 import { TemplatePicker } from './components/TemplatePicker/TemplatePicker';
 import { Drawer } from './components/Drawer/Drawer';
+import { ImportDrawer } from './components/ImportDrawer/ImportDrawer';
 import styles from './App.module.css';
 
-type DrawerType = 'jd' | 'changes' | 'paste' | null;
+type DrawerType = 'import' | 'jd' | 'changes' | 'paste' | null;
 
 export default function App() {
   const editor = useResumeEditor();
@@ -46,7 +47,10 @@ export default function App() {
         </div>
 
         <div className={styles.toolbarActions}>
-          <button className={`${styles.toolBtn} ${styles.toolBtnDisabled}`} disabled>
+          <button
+            className={`${styles.toolBtn} ${openDrawer === 'import' ? styles.toolBtnActive : ''}`}
+            onClick={() => toggleDrawer('import')}
+          >
             Import
           </button>
           <button
@@ -122,6 +126,7 @@ export default function App() {
             onFitChange={editor.setFitResult}
             highlightedBulletIds={highlightedBulletIds}
             scale={displayScale}
+            styleOverrides={editor.importedStyleOverrides}
           />
         </div>
 
@@ -137,6 +142,17 @@ export default function App() {
       </main>
 
       {/* ── Drawers ───────────────────────────────────────────────── */}
+      {openDrawer === 'import' && (
+        <Drawer title="Import resume" onClose={() => setOpenDrawer(null)} width={420}>
+          <ImportDrawer
+            onLoad={(resume, styleOverrides) => {
+              editor.loadNewResume(resume, styleOverrides);
+              setOpenDrawer(null);
+            }}
+          />
+        </Drawer>
+      )}
+
       {openDrawer === 'jd' && (
         <Drawer title="Job description" onClose={() => setOpenDrawer(null)}>
           <JDPanel

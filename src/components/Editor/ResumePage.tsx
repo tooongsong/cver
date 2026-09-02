@@ -24,6 +24,7 @@ type Props = {
   onFitChange: (result: FitResult) => void;
   highlightedBulletIds?: string[];
   scale?: number;
+  styleOverrides?: Record<string, string>;
 };
 
 export function ResumePage({
@@ -38,6 +39,7 @@ export function ResumePage({
   onFitChange,
   highlightedBulletIds = [],
   scale = 1,
+  styleOverrides = {},
 }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -58,7 +60,7 @@ export function ResumePage({
     );
   };
 
-  const cssVarStyle = template.cssVars as React.CSSProperties;
+  const cssVarStyle = { ...template.cssVars, ...styleOverrides } as React.CSSProperties;
 
   return (
     <div
