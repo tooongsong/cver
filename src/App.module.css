@@ -9,47 +9,70 @@
   color: var(--ink);
 }
 
-/* ── Top bar ─────────────────────────────────────────────────────── */
+/* ── Top bar — three-column editorial grid ───────────────────────── */
 .topBar {
-  display: flex;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  height: 60px;
-  min-height: 60px;
+  height: 52px;
+  min-height: 52px;
   background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--line);
   flex-shrink: 0;
-  gap: 16px;
-  min-width: 0;
 }
 
 .topBarLeft {
   display: flex;
   align-items: center;
-  gap: 12px;
+  padding: 0 20px;
+  border-right: 1px solid var(--line);
+  height: 100%;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.topBarCenter {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 10px;
   min-width: 0;
   overflow: hidden;
 }
 
+.topBarRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px;
+  border-left: 1px solid var(--line);
+  height: 100%;
+  flex-shrink: 0;
+}
+
+/* ── Logo / wordmark ─────────────────────────────────────────────── */
 .logo {
-  font-size: 17px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 15px;
   font-weight: 800;
   color: var(--ink);
-  letter-spacing: -0.04em;
+  letter-spacing: -0.03em;
   white-space: nowrap;
   flex-shrink: 0;
-  /* Small yellow underline as brand marker */
-  text-decoration: underline;
-  text-decoration-color: var(--accent);
-  text-decoration-thickness: 2.5px;
-  text-underline-offset: 3px;
+}
+
+.logoMark {
+  color: var(--accent);
+  font-size: 9px;
+  line-height: 1;
 }
 
 .tagline {
-  font-size: 11.5px;
+  font-size: 11px;
   color: var(--ink-muted);
-  letter-spacing: -0.01em;
+  letter-spacing: 0.01em;
   white-space: nowrap;
   flex-shrink: 1;
   overflow: hidden;
@@ -60,54 +83,47 @@
   font-size: 10px;
   font-weight: 500;
   color: var(--ink-muted);
-  border: 1px solid var(--border);
+  border: 1px solid var(--line);
   padding: 2px 8px;
   border-radius: var(--radius-pill);
   white-space: nowrap;
   flex-shrink: 0;
-  letter-spacing: 0.02em;
-}
-
-.topBarRight {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
+  letter-spacing: 0.03em;
 }
 
 /* ── Mobile tabs ─────────────────────────────────────────────────── */
 .mobileTabs {
   display: none;
   background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--line);
   flex-shrink: 0;
 }
 
 .mobileTab {
   flex: 1;
   font: inherit;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
-  padding: 13px 0;
+  padding: 12px 0;
   border: none;
   background: none;
   color: var(--ink-muted);
   cursor: pointer;
-  border-bottom: 2.5px solid transparent;
+  border-bottom: 2px solid transparent;
   transition: all var(--transition);
   white-space: nowrap;
 }
 
 .mobileTabActive {
   color: var(--ink);
-  font-weight: 600;
+  font-weight: 700;
   border-bottom-color: var(--accent);
 }
 
 /* ── Workspace grid ──────────────────────────────────────────────── */
 .workspace {
   display: grid;
-  grid-template-columns: minmax(270px, 310px) minmax(0, 1fr) minmax(350px, 400px);
+  grid-template-columns: minmax(280px, 320px) minmax(650px, 1fr) minmax(350px, 400px);
   flex: 1;
   overflow: hidden;
   min-width: 0;
@@ -122,13 +138,37 @@
 }
 
 .panelLeft {
-  border-right: 1px solid var(--border);
+  border-right: 1px solid var(--line);
   padding: 20px 18px;
 }
 
 .panelRight {
-  border-left: 1px solid var(--border);
+  border-left: 1px solid var(--line);
   padding: 20px 18px;
+}
+
+/* ── Panel section marker ────────────────────────────────────────── */
+.sectionMark {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.sectionNum {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+}
+
+.sectionLabel {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--ink-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 /* ── Center editor ───────────────────────────────────────────────── */
@@ -142,20 +182,60 @@
   min-height: 0;
 }
 
+/* ── Metadata strip ──────────────────────────────────────────────── */
+.metaStrip {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 24px;
+  height: 34px;
+  min-height: 34px;
+  border-bottom: 1px solid var(--line);
+  background: var(--canvas);
+  flex-shrink: 0;
+}
+
+.metaItem {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--ink-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.metaDivider {
+  width: 1px;
+  height: 12px;
+  background: var(--line);
+  flex-shrink: 0;
+}
+
+.metaFit {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.metaFitOk { color: var(--success); }
+.metaFitWarn { color: var(--ink-muted); }
+
 .resumeScroller {
   flex: 1;
   overflow: auto;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 40px 32px;
+  padding: 36px 32px;
 }
 
 /* ── Loading overlay ─────────────────────────────────────────────── */
 .loadingOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(231, 231, 228, 0.80);
+  background: rgba(241, 241, 237, 0.82);
   backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
@@ -165,7 +245,7 @@
 
 .loadingCard {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--line);
   border-radius: var(--radius-card);
   padding: 28px 32px;
   display: flex;
@@ -192,54 +272,67 @@
 }
 
 .spinner {
-  width: 24px;
-  height: 24px;
-  border: 2px solid var(--border);
-  border-top-color: var(--ink);
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid var(--line);
+  border-top-color: var(--accent);
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  animation: spin 0.75s linear infinite;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
-/* ── Responsive: standard laptop 1180–1439px ─────────────────────── */
+/* ── Responsive: 1180–1439px — tighter three panels ─────────────── */
 @media (max-width: 1439px) {
   .workspace {
-    grid-template-columns: minmax(250px, 280px) minmax(0, 1fr) minmax(340px, 380px);
+    grid-template-columns: minmax(250px, 280px) minmax(0, 1fr) minmax(330px, 370px);
+  }
+  .topBar {
+    grid-template-columns: 250px minmax(0, 1fr) auto;
   }
   .tagline { display: none; }
 }
 
-/* ── Responsive: small laptop 1024–1179px ────────────────────────── */
+/* ── Responsive: 768–1179px — tabs ──────────────────────────────── */
 @media (max-width: 1179px) {
-  .workspace {
-    grid-template-columns: minmax(240px, 260px) minmax(0, 1fr) minmax(320px, 360px);
-  }
-  .panelLeft { padding: 16px 14px; }
-  .panelRight { padding: 16px 14px; }
-}
-
-/* ── Responsive: tablet/narrow below 1024px ─────────────────────── */
-@media (max-width: 1023px) {
   .workspace { grid-template-columns: 1fr; }
   .mobileTabs { display: flex; }
   .hiddenMobile { display: none; }
   .sidePanel {
     border-right: none;
     border-left: none;
-    border-bottom: 1px solid var(--border);
     padding: 16px;
   }
-  .topBar { padding: 0 16px; height: 56px; min-height: 56px; }
+  .topBar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    height: 48px;
+    min-height: 48px;
+  }
+  .topBarLeft {
+    padding: 0 16px;
+    border-right: none;
+  }
+  .topBarCenter { display: none; }
+  .topBarRight {
+    padding: 0 16px;
+    border-left: none;
+  }
+  .metaStrip { padding: 0 16px; gap: 12px; }
 }
 
-/* ── Responsive: mobile below 760px ─────────────────────────────── */
-@media (max-width: 759px) {
-  .topBar { padding: 0 12px; height: 52px; min-height: 52px; }
-  .logo { font-size: 15px; }
-  .topBarRight { gap: 6px; }
-  .resumeScroller { padding: 20px 12px; }
+/* ── Responsive: mobile <768px ───────────────────────────────────── */
+@media (max-width: 767px) {
+  .topBar {
+    grid-template-columns: auto 1fr auto;
+    height: 44px;
+    min-height: 44px;
+  }
+  .topBarLeft { padding: 0 12px; }
+  .topBarRight { padding: 0 12px; gap: 6px; }
+  .logo { font-size: 14px; }
   .mockBadge { display: none; }
+  .resumeScroller { padding: 20px 12px; }
+  .metaStrip { height: 30px; min-height: 30px; padding: 0 12px; gap: 10px; }
 }

@@ -19,13 +19,21 @@ export default function App() {
       ? editor.fitResult.scale
       : 1;
 
+  const fitPct = Math.round(editor.fitResult.scale * 100);
+  const fitOk = editor.fitResult.fits || editor.fitResult.scale >= 0.82;
+
   return (
     <div className={styles.app}>
       <header className={styles.topBar} data-print="hide">
         <div className={styles.topBarLeft}>
-          <span className={styles.logo}>cver</span>
-          <span className={styles.tagline}>role-specific resume editor</span>
+          <span className={styles.logo}>
+            <span className={styles.logoMark}>●</span>
+            cver
+          </span>
           <span className={styles.mockBadge}>mock mode</span>
+        </div>
+        <div className={styles.topBarCenter}>
+          <span className={styles.tagline}>role-specific resume editor</span>
         </div>
         <div className={styles.topBarRight}>
           <TemplatePicker
@@ -61,7 +69,7 @@ export default function App() {
             className={`${styles.mobileTab} ${editor.activeView === tab ? styles.mobileTabActive : ''}`}
             onClick={() => editor.setActiveView(tab)}
           >
-            {tab === 'jd' ? 'Job Description' : tab === 'editor' ? 'Resume' : 'AI Changes'}
+            {tab === 'jd' ? 'Job description' : tab === 'editor' ? 'Resume' : 'AI changes'}
           </button>
         ))}
       </div>
@@ -71,6 +79,10 @@ export default function App() {
           className={`${styles.sidePanel} ${styles.panelLeft} ${editor.activeView !== 'jd' ? styles.hiddenMobile : ''}`}
           data-print="hide"
         >
+          <div className={styles.sectionMark}>
+            <span className={styles.sectionNum}>01</span>
+            <span className={styles.sectionLabel}>Job description</span>
+          </div>
           <JDPanel
             jobDescription={editor.jobDescription}
             targetCompany={editor.targetCompany}
@@ -95,6 +107,18 @@ export default function App() {
         <div
           className={`${styles.editorArea} ${editor.activeView !== 'editor' ? styles.hiddenMobile : ''}`}
         >
+          <div className={styles.metaStrip} data-print="hide">
+            <span className={styles.metaItem}>
+              RESUME{editor.targetCompany ? ` / ${editor.targetCompany.toUpperCase()}` : ''}
+            </span>
+            <span className={styles.metaDivider} />
+            <span className={styles.metaItem}>01 PAGE</span>
+            <span className={styles.metaDivider} />
+            <span className={`${styles.metaFit} ${fitOk ? styles.metaFitOk : styles.metaFitWarn}`}>
+              {editor.fitResult.fits ? '100%' : `${fitPct}%`} FIT
+            </span>
+          </div>
+
           <div className={styles.resumeScroller}>
             <ResumePage
               resume={editor.currentResume}
@@ -126,6 +150,10 @@ export default function App() {
           className={`${styles.sidePanel} ${styles.panelRight} ${editor.activeView !== 'review' ? styles.hiddenMobile : ''}`}
           data-print="hide"
         >
+          <div className={styles.sectionMark}>
+            <span className={styles.sectionNum}>02</span>
+            <span className={styles.sectionLabel}>Suggested changes</span>
+          </div>
           <ReviewPanel
             proposedChanges={editor.proposedChanges}
             warnings={editor.warnings}

@@ -37,14 +37,11 @@ export function ReviewPanel({
 
   return (
     <div className={styles.panel}>
-      <div className={styles.panelHeader}>
-        <h2 className={styles.panelTitle}>Suggested changes</h2>
-        <span className={styles.count}>
-          {proposedChanges.length > 0
-            ? `${acceptedCount} accepted · ${pendingCount} pending`
-            : 'No suggestions yet'}
-        </span>
-      </div>
+      {proposedChanges.length > 0 && (
+        <p className={styles.count}>
+          {acceptedCount} accepted · {pendingCount} pending
+        </p>
+      )}
 
       <FitIndicator fit={fitResult} />
 

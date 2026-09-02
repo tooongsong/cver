@@ -44,13 +44,6 @@ export function JDPanel({
 
   return (
     <div className={styles.panel}>
-      <div className={styles.panelHeader}>
-        <h2 className={styles.panelTitle}>Job description</h2>
-        <span className={styles.mockBadge} title="Results use mock data. Connect a Claude API server for real suggestions.">
-          mock mode
-        </span>
-      </div>
-
       <div className={styles.fieldRow}>
         <input
           className={styles.input}
