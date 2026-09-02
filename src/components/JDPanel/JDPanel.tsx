@@ -45,9 +45,9 @@ export function JDPanel({
   return (
     <div className={styles.panel}>
       <div className={styles.panelHeader}>
-        <h2 className={styles.panelTitle}>Job Description</h2>
-        <span className={styles.mockBadge} title="This analysis uses a mock AI. Connect a server-side Claude API for production.">
-          Mock AI
+        <h2 className={styles.panelTitle}>Job description</h2>
+        <span className={styles.mockBadge} title="Results use mock data. Connect a Claude API server for real suggestions.">
+          mock mode
         </span>
       </div>
 
@@ -79,20 +79,20 @@ export function JDPanel({
           onClick={onAnalyze}
           disabled={isAnalyzing || !jobDescription.trim()}
         >
-          {isAnalyzing ? 'Analyzing…' : 'Analyze JD'}
+          {isAnalyzing ? 'Analyzing…' : 'Analyze job'}
         </button>
         <button
           className={styles.btnPrimary}
           onClick={onTailor}
           disabled={isTailoring || !jobDescription.trim()}
         >
-          {isTailoring ? 'Tailoring…' : 'Tailor Resume'}
+          {isTailoring ? 'Working…' : 'Tailor resume'}
         </button>
       </div>
 
       {/* Options */}
       <div className={styles.optionsSection}>
-        <p className={styles.optionsLabel}>AI intensity</p>
+        <p className={styles.optionsLabel}>Edit depth</p>
         <div className={styles.intensityRow}>
           {(['conservative', 'balanced', 'aggressive'] as const).map((level) => (
             <button
@@ -107,11 +107,11 @@ export function JDPanel({
 
         <div className={styles.toggles}>
           {[
-            { key: 'prioritizeATS', label: 'Prioritize ATS keywords' },
-            { key: 'keepAllExperiences', label: 'Keep all experiences' },
+            { key: 'prioritizeATS', label: 'Keep ATS keywords' },
+            { key: 'keepAllExperiences', label: 'Keep all experience entries' },
             { key: 'keepEducationUnchanged', label: 'Keep education unchanged' },
             { key: 'preserveJobTitles', label: 'Preserve job titles' },
-            { key: 'forceOnePage', label: 'Force one-page output' },
+            { key: 'forceOnePage', label: 'Fit to one page' },
           ].map(({ key, label }) => (
             <label key={key} className={styles.toggle}>
               <input
@@ -130,7 +130,7 @@ export function JDPanel({
       {/* Analysis results */}
       {jdAnalysis && (
         <div className={styles.analysisSection}>
-          <h3 className={styles.analysisTitle}>JD Analysis</h3>
+          <h3 className={styles.analysisTitle}>Job analysis</h3>
 
           {jdAnalysis.requiredSkills.length > 0 && (
             <div className={styles.analysisGroup}>
@@ -157,7 +157,7 @@ export function JDPanel({
           <div className={styles.keywordGroups}>
             {supported.length > 0 && (
               <div className={styles.kwGroup}>
-                <p className={styles.kwLabel}>✓ In your resume</p>
+                <p className={styles.kwLabel}>In your resume</p>
                 <div className={styles.kwList}>
                   {supported.map((k) => (
                     <span key={k.term} className={`${styles.kwTag} ${styles.kwSupported}`}>
@@ -170,7 +170,7 @@ export function JDPanel({
 
             {transferable.length > 0 && (
               <div className={styles.kwGroup}>
-                <p className={styles.kwLabel}>≈ Transferable</p>
+                <p className={styles.kwLabel}>Transferable</p>
                 <div className={styles.kwList}>
                   {transferable.map((k) => (
                     <span key={k.term} className={`${styles.kwTag} ${styles.kwTransferable}`}>
@@ -183,7 +183,7 @@ export function JDPanel({
 
             {unsupported.length > 0 && (
               <div className={styles.kwGroup}>
-                <p className={styles.kwLabel}>✗ Not in resume (gap)</p>
+                <p className={styles.kwLabel}>Not in resume</p>
                 <div className={styles.kwList}>
                   {unsupported.map((k) => (
                     <span key={k.term} className={`${styles.kwTag} ${styles.kwUnsupported}`}>

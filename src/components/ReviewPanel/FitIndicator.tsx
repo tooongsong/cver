@@ -11,11 +11,9 @@ export function FitIndicator({ fit }: Props) {
 
   return (
     <div className={`${styles.indicator} ${ok ? styles.ok : styles.warn}`}>
-      <span className={styles.icon}>{ok ? '◉' : '⚠'}</span>
+      <span className={styles.dot} aria-hidden />
       <span className={styles.label}>
-        {fit.fits
-          ? 'One-page fit: 100%'
-          : `One-page fit: ${pct}%`}
+        {fit.fits ? 'Fits on one page' : `Over one page (${pct}% fit)`}
       </span>
       {fit.message && !fit.fits && (
         <span className={styles.detail}>{fit.message}</span>

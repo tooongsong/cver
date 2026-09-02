@@ -14,10 +14,10 @@
   font: inherit;
   font-size: 12.5px;
   font-weight: 500;
-  min-height: 40px;
-  padding: 0 14px;
-  border-radius: var(--radius-md);
-  border: 1.5px solid var(--line);
+  min-height: 38px;
+  padding: 0 13px;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border);
   background: var(--surface);
   color: var(--ink);
   cursor: pointer;
@@ -27,20 +27,20 @@
   flex: 0 0 auto;
 }
 .trigger:hover,
-.saveCurrent:hover { border-color: var(--accent); }
+.saveCurrent:hover { border-color: var(--ink); }
 
 .badge {
-  background: var(--canvas);
+  background: var(--surface-pressed);
   color: var(--ink-muted);
   font-size: 10px;
   font-weight: 700;
   padding: 1px 6px;
   border-radius: var(--radius-pill);
-  min-width: 18px;
+  min-width: 16px;
   text-align: center;
 }
 
-.chevron { font-size: 9px; color: var(--ink-muted); }
+.chevron { font-size: 8px; color: var(--ink-muted); }
 
 .backdrop {
   position: fixed;
@@ -52,16 +52,16 @@
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  min-width: 340px;
+  min-width: 320px;
   background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
   box-shadow: var(--shadow-dropdown);
   z-index: 100;
-  padding: 10px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .empty {
@@ -77,8 +77,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 9px 10px;
-  border-radius: var(--radius-md);
+  padding: 8px 9px;
+  border-radius: 9px;
   transition: background var(--transition);
 }
 .versionRow:hover { background: var(--surface-soft); }
@@ -86,7 +86,7 @@
 .versionInfo {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   flex: 1;
   min-width: 0;
 }
@@ -98,7 +98,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.versionMeta { font-size: 11px; color: var(--ink-muted); }
+.versionMeta { font-size: 10.5px; color: var(--ink-muted); }
 
 .versionActions { display: flex; gap: 4px; flex-shrink: 0; }
 
@@ -108,25 +108,25 @@
   font: inherit;
   font-size: 11px;
   font-weight: 500;
-  padding: 4px 9px;
-  min-height: 30px;
-  border-radius: var(--radius-sm);
-  border: 1.5px solid var(--border-light);
+  padding: 3px 8px;
+  min-height: 28px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
   background: var(--surface);
   color: var(--ink-secondary);
   cursor: pointer;
   transition: all var(--transition);
   white-space: nowrap;
 }
-.versionBtn:hover { border-color: var(--accent); color: var(--ink); }
+.versionBtn:hover { border-color: var(--ink); color: var(--ink); }
 
 .renameInput {
   font: inherit;
   font-size: 12.5px;
   flex: 1;
-  padding: 5px 9px;
-  border: 1.5px solid var(--accent);
-  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  border: 1.5px solid var(--ink);
+  border-radius: 7px;
   outline: none;
   color: var(--ink);
   background: var(--surface);

@@ -66,7 +66,7 @@ export function ExportControls({ resume, proposedChanges, warnings }: Props) {
         <div className={`${styles.preflightPanel} ${preflight.passed ? styles.passed : styles.failed}`}>
           <div className={styles.preflightHeader}>
             <span className={styles.preflightTitle}>
-              {preflight.passed ? '✓ One-page preflight passed' : '✗ Export blocked'}
+              {preflight.passed ? 'Ready to export' : 'Cannot export yet'}
             </span>
             <button className={styles.closeBtn} onClick={() => setShowPreflight(false)}>✕</button>
           </div>
@@ -83,7 +83,7 @@ export function ExportControls({ resume, proposedChanges, warnings }: Props) {
           </ul>
           {preflight.passed && (
             <p className={styles.printNote}>
-              Printing… The exported PDF will contain only the resume page.
+              Printing. The PDF contains only the resume.
             </p>
           )}
         </div>

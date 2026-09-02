@@ -24,7 +24,8 @@ export default function App() {
       <header className={styles.topBar} data-print="hide">
         <div className={styles.topBarLeft}>
           <span className={styles.logo}>cver</span>
-          <span className={styles.mockBadge}>Mock AI</span>
+          <span className={styles.tagline}>role-specific resume editor</span>
+          <span className={styles.mockBadge}>mock mode</span>
         </div>
         <div className={styles.topBarRight}>
           <TemplatePicker
@@ -114,8 +115,8 @@ export default function App() {
             <div className={styles.loadingOverlay}>
               <div className={styles.loadingCard}>
                 <span className={styles.spinner} />
-                <p>Tailoring your resume…</p>
-                <p className={styles.mockLabel}>Mock AI — connect Claude API for production</p>
+                <p>Comparing the job description with your resume…</p>
+                <p className={styles.mockLabel}>Mock mode · connect Claude API for real results</p>
               </div>
             </div>
           )}

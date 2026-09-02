@@ -13,8 +13,8 @@ type Props = {
 
 const RISK_LABELS: Record<ResumeChange['riskLevel'], string> = {
   safe: 'Safe',
-  review: 'Review suggested',
-  blocked: 'Blocked — do not accept',
+  review: 'Verify before accepting',
+  blocked: 'Blocked: adds a claim not in your resume',
 };
 
 const CHANGE_TYPE_LABELS: Record<ResumeChange['changeType'], string> = {
@@ -90,7 +90,7 @@ export function ChangeItem({ change, onAccept, onReject, onUndo, onEdit }: Props
           {/* JD evidence */}
           {change.jdEvidence.length > 0 && (
             <div className={styles.evidenceGroup}>
-              <p className={styles.evidenceLabel}>JD reference</p>
+              <p className={styles.evidenceLabel}>From the job description</p>
               {change.jdEvidence.map((e, i) => (
                 <p key={i} className={styles.evidenceText}>"{e}"</p>
               ))}
@@ -102,7 +102,7 @@ export function ChangeItem({ change, onAccept, onReject, onUndo, onEdit }: Props
             <DiffViewer before={change.before} after={change.after} />
           ) : (
             <div className={styles.editArea}>
-              <p className={styles.evidenceLabel}>Edit proposed text</p>
+              <p className={styles.evidenceLabel}>Edit suggestion</p>
               <textarea
                 className={styles.editTextarea}
                 value={editDraft}
@@ -110,7 +110,7 @@ export function ChangeItem({ change, onAccept, onReject, onUndo, onEdit }: Props
                 rows={4}
               />
               <div className={styles.editActions}>
-                <button className={styles.btnSave} onClick={commitEdit}>Save edit</button>
+                <button className={styles.btnSave} onClick={commitEdit}>Save</button>
                 <button className={styles.btnCancel} onClick={() => { setEditing(false); setEditDraft(change.after); }}>
                   Cancel
                 </button>
@@ -126,7 +126,7 @@ export function ChangeItem({ change, onAccept, onReject, onUndo, onEdit }: Props
                   className={styles.btnAccept}
                   onClick={onAccept}
                   disabled={change.riskLevel === 'blocked'}
-                  title={change.riskLevel === 'blocked' ? 'This change is blocked due to truthfulness concerns.' : undefined}
+                  title={change.riskLevel === 'blocked' ? 'This suggestion adds a claim not in your original resume.' : undefined}
                 >
                   Accept
                 </button>

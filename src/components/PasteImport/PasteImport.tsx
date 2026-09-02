@@ -39,13 +39,13 @@ export function PasteImport({ resume, onAddChange }: Props) {
   return (
     <div className={styles.wrapper}>
       <button className={styles.trigger} onClick={() => { setOpen((o) => !o); setResult(null); setApplied(false); }}>
-        {open ? 'Close' : '+ Paste edited text'}
+        {open ? 'Close' : 'Paste edited text'}
       </button>
 
       {open && (
         <div className={styles.panel}>
           <p className={styles.hint}>
-            Paste text you've edited externally (e.g. from Claude, ChatGPT, or a document). We'll find the closest matching resume field and create a tracked change.
+            Paste text edited outside cver. The closest resume field is matched automatically and added as a tracked change.
           </p>
 
           <textarea
@@ -90,15 +90,15 @@ export function PasteImport({ resume, onAddChange }: Props) {
           )}
 
           {!result && text.trim() && (
-            <p className={styles.noMatch}>Click "Match to resume" to find the closest field.</p>
+            <p className={styles.noMatch}>Click Match to resume to continue.</p>
           )}
 
           {applied && (
-            <p className={styles.success}>✓ Added to AI Changes panel. Accept or edit it there.</p>
+            <p className={styles.success}>Added to Suggested changes. Review it in the right panel.</p>
           )}
 
           {result === null && text.trim() === '' && (
-            <p className={styles.noMatch}>No text entered yet.</p>
+            <p className={styles.noMatch}>No text pasted yet.</p>
           )}
         </div>
       )}

@@ -2,7 +2,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   flex-shrink: 0;
 }
 
@@ -10,18 +10,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
   font: inherit;
   font-size: 13px;
   font-weight: 700;
-  min-height: 40px;
+  min-height: 38px;
   padding: 0 18px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-control);
   border: none;
   background: var(--accent);
-  color: var(--ink);
+  color: var(--accent-ink);
   cursor: pointer;
-  transition: background var(--transition), transform 80ms ease;
+  transition: background var(--transition), transform 70ms ease;
   white-space: nowrap;
   flex: 0 0 auto;
   letter-spacing: -0.01em;
@@ -36,10 +35,10 @@
   font: inherit;
   font-size: 12px;
   font-weight: 500;
-  min-height: 40px;
+  min-height: 38px;
   padding: 0 14px;
-  border-radius: var(--radius-md);
-  border: 1.5px solid var(--line);
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border);
   background: var(--surface);
   color: var(--ink-secondary);
   cursor: pointer;
@@ -47,7 +46,7 @@
   white-space: nowrap;
   flex: 0 0 auto;
 }
-.btnSecondary:hover { border-color: var(--accent); color: var(--ink); }
+.btnSecondary:hover { border-color: var(--ink); color: var(--ink); }
 
 /* ── Preflight panel ────────────────────────────────────── */
 .preflightPanel {
@@ -56,7 +55,7 @@
   right: 0;
   width: 340px;
   background: var(--surface);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-card);
   box-shadow: var(--shadow-dropdown);
   z-index: 200;
   overflow: hidden;
@@ -69,8 +68,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--border-light);
+  padding: 13px 15px;
+  border-bottom: 1px solid var(--border);
 }
 
 .preflightTitle {
@@ -89,9 +88,9 @@
   border: none;
   cursor: pointer;
   color: var(--ink-muted);
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-sm);
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
   transition: all var(--transition);
   flex-shrink: 0;
 }
@@ -99,11 +98,11 @@
 
 .checkList {
   list-style: none;
-  padding: 12px 16px;
+  padding: 11px 15px;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
 }
 
 .checkPassed, .checkFailed {
@@ -121,10 +120,10 @@
 .checkDetail { font-size: 11px; color: var(--ink-secondary); margin-top: 2px; display: block; }
 
 .printNote {
-  padding: 10px 16px 14px;
+  padding: 9px 15px 13px;
   font-size: 11.5px;
   color: var(--ink-muted);
-  border-top: 1px solid var(--border-light);
+  border-top: 1px solid var(--border);
   margin: 0;
   line-height: 1.5;
 }

@@ -18,39 +18,54 @@
   height: 60px;
   min-height: 60px;
   background: var(--surface);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--border);
   flex-shrink: 0;
-  gap: 12px;
+  gap: 16px;
   min-width: 0;
 }
 
 .topBarLeft {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   min-width: 0;
   overflow: hidden;
 }
 
 .logo {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 17px;
+  font-weight: 800;
   color: var(--ink);
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
   white-space: nowrap;
   flex-shrink: 0;
+  /* Small yellow underline as brand marker */
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2.5px;
+  text-underline-offset: 3px;
+}
+
+.tagline {
+  font-size: 11.5px;
+  color: var(--ink-muted);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  flex-shrink: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mockBadge {
   font-size: 10px;
-  font-weight: 600;
-  color: var(--warning);
-  background: var(--warning-soft);
-  border: 1px solid rgba(138, 100, 24, 0.2);
-  padding: 3px 10px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
   border-radius: var(--radius-pill);
   white-space: nowrap;
   flex-shrink: 0;
+  letter-spacing: 0.02em;
 }
 
 .topBarRight {
@@ -64,7 +79,7 @@
 .mobileTabs {
   display: none;
   background: var(--surface);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
 
@@ -78,7 +93,7 @@
   background: none;
   color: var(--ink-muted);
   cursor: pointer;
-  border-bottom: 2px solid transparent;
+  border-bottom: 2.5px solid transparent;
   transition: all var(--transition);
   white-space: nowrap;
 }
@@ -107,12 +122,12 @@
 }
 
 .panelLeft {
-  border-right: 1px solid var(--line);
+  border-right: 1px solid var(--border);
   padding: 20px 18px;
 }
 
 .panelRight {
-  border-left: 1px solid var(--line);
+  border-left: 1px solid var(--border);
   padding: 20px 18px;
 }
 
@@ -140,8 +155,8 @@
 .loadingOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(232, 232, 230, 0.80);
-  backdrop-filter: blur(4px);
+  background: rgba(231, 231, 228, 0.80);
+  backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -150,8 +165,8 @@
 
 .loadingCard {
   background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
   padding: 28px 32px;
   display: flex;
   flex-direction: column;
@@ -177,12 +192,12 @@
 }
 
 .spinner {
-  width: 28px;
-  height: 28px;
-  border: 2.5px solid var(--line);
-  border-top-color: var(--accent);
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border);
+  border-top-color: var(--ink);
   border-radius: 50%;
-  animation: spin 0.75s linear infinite;
+  animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
@@ -194,9 +209,10 @@
   .workspace {
     grid-template-columns: minmax(250px, 280px) minmax(0, 1fr) minmax(340px, 380px);
   }
+  .tagline { display: none; }
 }
 
-/* ── Responsive: small laptop / tablet 1024–1179px ──────────────── */
+/* ── Responsive: small laptop 1024–1179px ────────────────────────── */
 @media (max-width: 1179px) {
   .workspace {
     grid-template-columns: minmax(240px, 260px) minmax(0, 1fr) minmax(320px, 360px);
@@ -205,17 +221,15 @@
   .panelRight { padding: 16px 14px; }
 }
 
-/* ── Responsive: narrow / tablet below 1024px ───────────────────── */
+/* ── Responsive: tablet/narrow below 1024px ─────────────────────── */
 @media (max-width: 1023px) {
-  .workspace {
-    grid-template-columns: 1fr;
-  }
+  .workspace { grid-template-columns: 1fr; }
   .mobileTabs { display: flex; }
   .hiddenMobile { display: none; }
   .sidePanel {
     border-right: none;
     border-left: none;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid var(--border);
     padding: 16px;
   }
   .topBar { padding: 0 16px; height: 56px; min-height: 56px; }
@@ -223,12 +237,9 @@
 
 /* ── Responsive: mobile below 760px ─────────────────────────────── */
 @media (max-width: 759px) {
-  .topBar {
-    padding: 0 12px;
-    height: 52px;
-    min-height: 52px;
-  }
-  .logo { font-size: 14px; }
+  .topBar { padding: 0 12px; height: 52px; min-height: 52px; }
+  .logo { font-size: 15px; }
   .topBarRight { gap: 6px; }
   .resumeScroller { padding: 20px 12px; }
+  .mockBadge { display: none; }
 }

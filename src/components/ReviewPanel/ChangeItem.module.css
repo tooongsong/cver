@@ -1,30 +1,31 @@
 .item {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
   background: var(--surface);
-  box-shadow: var(--shadow-card);
   min-width: 0;
   width: 100%;
   overflow-wrap: anywhere;
+  transition: border-color var(--transition);
 }
 
+/* Thin left edge for status — only on the left, not full colored background */
 .risk_blocked { border-left: 3px solid var(--danger); }
-.risk_review  { border-left: 3px solid var(--accent); }
-.risk_safe    { border-left: 3px solid var(--success); }
-.status_rejected { opacity: 0.5; }
+.risk_review  { border-left: 3px solid var(--accent-hover); }
+.risk_safe    {} /* no extra marker — neutral is the default */
+.status_rejected { opacity: 0.48; }
 
 .headerBtn {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 11px 13px;
+  padding: 10px 12px;
   background: none;
   border: none;
   cursor: pointer;
   text-align: left;
   gap: 8px;
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
   transition: background var(--transition);
   min-width: 0;
 }
@@ -40,12 +41,12 @@
 }
 
 .riskDot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   flex-shrink: 0;
 }
-.dot_safe    { background: var(--success); }
+.dot_safe    { background: var(--border); }
 .dot_review  { background: var(--accent-hover); }
 .dot_blocked { background: var(--danger); }
 
@@ -64,9 +65,9 @@
 .typeChip {
   font-size: 10px;
   font-weight: 500;
-  background: var(--canvas);
+  background: var(--surface-pressed);
   color: var(--ink-muted);
-  padding: 3px 8px;
+  padding: 2px 7px;
   border-radius: var(--radius-pill);
   flex-shrink: 0;
   white-space: nowrap;
@@ -82,11 +83,11 @@
 .statusChip {
   font-size: 10px;
   font-weight: 600;
-  padding: 3px 9px;
+  padding: 2px 8px;
   border-radius: var(--radius-pill);
   white-space: nowrap;
 }
-.statusChip_pending  { background: var(--canvas); color: var(--ink-secondary); }
+.statusChip_pending  { background: var(--surface-pressed); color: var(--ink-muted); }
 .statusChip_accepted { background: var(--success-soft); color: var(--success); }
 .statusChip_rejected { background: var(--danger-soft); color: var(--danger); }
 .statusChip_edited   { background: var(--accent-soft); color: var(--warning); }
@@ -94,30 +95,29 @@
 .chevron { font-size: 9px; color: var(--ink-muted); flex-shrink: 0; }
 
 .body {
-  padding: 0 13px 13px;
+  padding: 0 12px 12px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 9px;
   min-width: 0;
 }
 
 .riskBanner {
   font-size: 11.5px;
-  font-weight: 600;
+  font-weight: 500;
   padding: 7px 10px;
-  border-radius: var(--radius-sm);
+  border-radius: 7px;
   margin: 0;
   overflow-wrap: anywhere;
+  line-height: 1.4;
 }
 .riskBanner_review  {
   background: var(--warning-soft);
   color: var(--warning);
-  border: 1px solid rgba(138, 100, 24, 0.2);
 }
 .riskBanner_blocked {
   background: var(--danger-soft);
   color: var(--danger);
-  border: 1px solid var(--ai-remove-border);
 }
 
 .reason {
@@ -134,7 +134,7 @@
   font-size: 9.5px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   color: var(--ink-muted);
   margin: 0;
 }
@@ -144,21 +144,21 @@
   color: var(--ink-secondary);
   font-style: italic;
   margin: 0;
-  padding-left: 10px;
-  border-left: 2px solid var(--line);
+  padding-left: 9px;
+  border-left: 2px solid var(--border);
   overflow-wrap: anywhere;
   line-height: 1.45;
 }
 
-.editArea { display: flex; flex-direction: column; gap: 8px; }
+.editArea { display: flex; flex-direction: column; gap: 7px; }
 
 .editTextarea {
   font: inherit;
   font-size: 12px;
   line-height: 1.55;
-  padding: 9px 11px;
-  border: 1.5px solid var(--accent);
-  border-radius: var(--radius-md);
+  padding: 8px 10px;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-control);
   resize: vertical;
   outline: none;
   color: var(--ink);
@@ -169,11 +169,11 @@
   overflow-wrap: anywhere;
 }
 
-.editActions { display: flex; gap: 7px; flex-wrap: wrap; }
+.editActions { display: flex; gap: 6px; flex-wrap: wrap; }
 
 .actions {
   display: flex;
-  gap: 7px;
+  gap: 6px;
   flex-wrap: wrap;
   min-width: 0;
 }
@@ -190,25 +190,24 @@
   font: inherit;
   font-size: 12px;
   font-weight: 600;
-  min-height: 36px;
-  padding: 0 13px;
-  border-radius: var(--radius-md);
-  border: 1.5px solid transparent;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: var(--radius-control);
+  border: 1px solid transparent;
   cursor: pointer;
-  transition: all var(--transition), transform 80ms ease;
+  transition: all var(--transition), transform 70ms ease;
   white-space: nowrap;
   flex: 0 0 auto;
 }
 .btnAccept:active,
-.btnReject:active,
-.btnEdit:active { transform: translateY(1px); }
+.btnReject:active { transform: translateY(1px); }
 
 .btnAccept {
   background: var(--ink);
   color: var(--surface);
   border-color: var(--ink);
 }
-.btnAccept:hover:not(:disabled) { background: #333; border-color: #333; }
+.btnAccept:hover:not(:disabled) { background: #2c2c2c; }
 .btnAccept:disabled { opacity: 0.3; cursor: not-allowed; }
 
 .btnReject {
@@ -223,14 +222,13 @@
 .btnCancel {
   background: var(--surface);
   color: var(--ink-secondary);
-  border-color: var(--line);
+  border-color: var(--border);
 }
 .btnEdit:hover,
 .btnUndo:hover,
 .btnCancel:hover {
-  border-color: var(--accent);
+  border-color: var(--ink);
   color: var(--ink);
-  background: var(--accent-soft);
 }
 
 .btnSave {
@@ -238,4 +236,4 @@
   color: var(--success);
   border-color: var(--ai-add-border);
 }
-.btnSave:hover { background: #d0ede0; }
+.btnSave:hover { background: #d8eddf; }

@@ -38,11 +38,11 @@ export function ReviewPanel({
   return (
     <div className={styles.panel}>
       <div className={styles.panelHeader}>
-        <h2 className={styles.panelTitle}>AI Changes</h2>
+        <h2 className={styles.panelTitle}>Suggested changes</h2>
         <span className={styles.count}>
           {proposedChanges.length > 0
             ? `${acceptedCount} accepted · ${pendingCount} pending`
-            : 'No changes yet'}
+            : 'No suggestions yet'}
         </span>
       </div>
 
@@ -51,7 +51,7 @@ export function ReviewPanel({
       {proposedChanges.length > 0 && (
         <div className={styles.bulkActions}>
           <button className={styles.btnAcceptAll} onClick={onAcceptAll} disabled={pendingCount === 0}>
-            Accept all {blockedCount > 0 ? `(skips ${blockedCount} blocked)` : ''}
+            {blockedCount > 0 ? 'Accept safe changes' : 'Accept all'}
           </button>
           <button className={styles.btnRejectAll} onClick={onRejectAll} disabled={pendingCount === 0}>
             Reject all
@@ -65,7 +65,7 @@ export function ReviewPanel({
       {/* Blocked warnings */}
       {blockedWarnings.length > 0 && (
         <div className={styles.warningBox}>
-          <p className={styles.warningTitle}>⛔ Blocked changes require your review</p>
+          <p className={styles.warningTitle}>{blockedWarnings.length === 1 ? '1 suggestion needs evidence' : `${blockedWarnings.length} suggestions need evidence`}</p>
           {blockedWarnings.map((w) => (
             <p key={w.id} className={styles.warningText}>{w.message}</p>
           ))}
@@ -75,7 +75,7 @@ export function ReviewPanel({
       {/* Review warnings */}
       {reviewWarnings.length > 0 && (
         <div className={styles.reviewBox}>
-          <p className={styles.warningTitle}>⚠ Review these changes carefully</p>
+          <p className={styles.warningTitle}>{reviewWarnings.length === 1 ? '1 suggestion to check' : `${reviewWarnings.length} suggestions to check`}</p>
           {reviewWarnings.map((w) => (
             <p key={w.id} className={styles.warningText}>{w.message}</p>
           ))}
@@ -84,7 +84,7 @@ export function ReviewPanel({
 
       {proposedChanges.length === 0 ? (
         <div className={styles.empty}>
-          <p>Paste a job description and click <strong>Tailor Resume</strong> to generate AI suggestions.</p>
+          <p>Paste a job description to start comparing it with this resume.</p>
         </div>
       ) : (
         <div className={styles.changeList}>
