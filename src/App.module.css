@@ -1,4 +1,4 @@
-/* ── Shell ───────────────────────────────────────────────────────── */
+/* ── Shell ─────────────────────────────────────────────────────── */
 .app {
   display: flex;
   flex-direction: column;
@@ -9,181 +9,160 @@
   color: var(--ink);
 }
 
-/* ── Toolbar ─────────────────────────────────────────────────────── */
+/* ── Toolbar ───────────────────────────────────────────────────── */
 .toolbar {
   display: flex;
-  align-items: center;
-  height: 52px;
-  min-height: 52px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--line);
+  align-items: stretch;
+  height: 48px;
+  min-height: 48px;
+  background: var(--ink);
+  border-bottom: 1px solid #1a1a1a;
   flex-shrink: 0;
-  gap: 0;
   overflow: hidden;
 }
 
 .toolbarBrand {
   display: flex;
   align-items: center;
-  padding: 0 20px;
-  border-right: 1px solid var(--line);
-  height: 100%;
+  padding: 0 18px;
+  border-right: 1px solid #2a2a2a;
   flex-shrink: 0;
 }
 
 .logo {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--ink);
-  letter-spacing: -0.03em;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 900;
+  color: #FFFFFF;
+  letter-spacing: 0.04em;
   white-space: nowrap;
+  user-select: none;
 }
 
-.logoMark {
-  color: var(--accent);
-  font-size: 9px;
-  line-height: 1;
-}
-
-/* Primary action group */
+/* Actions group */
 .toolbarActions {
   display: flex;
-  align-items: center;
-  gap: 2px;
-  padding: 0 12px;
-  flex-shrink: 0;
-  border-right: 1px solid var(--line);
-  height: 100%;
+  align-items: stretch;
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-width: 0;
+  scrollbar-width: none;
 }
+.toolbarActions::-webkit-scrollbar { display: none; }
 
 .toolBtn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font: inherit;
-  font-size: 12.5px;
-  font-weight: 500;
-  min-height: 34px;
-  padding: 0 12px;
-  border-radius: var(--radius-control);
-  border: 1px solid transparent;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0 16px;
+  border: none;
+  border-right: 1px solid #2a2a2a;
   background: transparent;
-  color: var(--ink-secondary);
+  color: rgba(255,255,255,0.55);
   cursor: pointer;
   transition: all var(--transition);
   white-space: nowrap;
   flex-shrink: 0;
+  min-height: 48px;
 }
 .toolBtn:hover:not(:disabled) {
-  background: var(--surface-soft);
-  color: var(--ink);
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.9);
 }
 .toolBtnActive {
-  background: var(--accent-soft);
-  color: var(--accent);
-  border-color: var(--accent-border);
+  background: var(--accent) !important;
+  color: #FFFFFF !important;
 }
-.toolBtnActive:hover {
-  background: var(--accent-soft) !important;
-  color: var(--accent) !important;
-}
-.toolBtnDisabled {
-  color: var(--ink-muted);
-  cursor: not-allowed;
-}
+.toolBtnActive:hover { background: var(--accent-hover) !important; }
+.toolBtnDisabled { opacity: 0.3; cursor: not-allowed; }
 
 .toolBtnSpinner {
-  width: 10px;
-  height: 10px;
-  border: 1.5px solid var(--accent-soft);
-  border-top-color: var(--accent);
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  border-top-color: #FFFFFF;
   border-radius: 50%;
-  animation: spin 0.75s linear infinite;
+  animation: spin 0.6s linear infinite;
+  flex-shrink: 0;
 }
 
-/* Fit status — center spacer */
+.toolbarSpacer { flex: 1 1 auto; min-width: 0; }
+
+/* Fit badge */
 .toolbarStatus {
-  flex: 1;
   display: flex;
   align-items: center;
-  padding: 0 16px;
-  justify-content: center;
-  min-width: 0;
+  padding: 0 12px;
+  flex-shrink: 0;
+  border-left: 1px solid #2a2a2a;
 }
 
-.fitStatus {
+.fitBadge {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 5px 12px;
-  border-radius: var(--radius-pill);
+  gap: 6px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 5px 10px;
   border: 1px solid transparent;
-  background: transparent;
   cursor: pointer;
   transition: all var(--transition);
   white-space: nowrap;
-  letter-spacing: 0.01em;
+  background: none;
+  border-radius: 2px;
 }
-.fitStatus:disabled { cursor: default; }
+.fitBadge:disabled { cursor: default; }
 
-.fitOk {
-  color: var(--accent);
-  border-color: var(--accent-border);
-  background: var(--accent-soft);
-}
-.fitOk:hover:not(:disabled) { background: #d5dbff; }
+.fitOk { color: var(--lime); border-color: rgba(216,255,56,0.25); }
+.fitOk:hover:not(:disabled) { background: rgba(216,255,56,0.08); }
+.fitWarn { color: var(--warning); border-color: rgba(255,92,69,0.3); }
+.fitWarn:hover:not(:disabled) { background: rgba(255,92,69,0.06); }
 
-.fitWarn {
-  color: var(--warning);
-  border-color: rgba(145, 105, 26, 0.25);
-  background: var(--warning-soft);
-}
-.fitWarn:hover:not(:disabled) { background: #f5e5b0; }
-
-.fitDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: currentColor;
-  flex-shrink: 0;
-}
+.fitDot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 
 .changesBadge {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   background: var(--accent);
-  color: var(--accent-ink);
-  padding: 1px 6px;
-  border-radius: var(--radius-pill);
-  letter-spacing: 0.02em;
+  color: white;
+  padding: 1px 5px;
+  border-radius: 2px;
 }
 
-/* Right controls */
+/* Right group */
 .toolbarRight {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 16px;
-  border-left: 1px solid var(--line);
-  height: 100%;
+  align-items: stretch;
   flex-shrink: 0;
 }
 
-/* ── Workspace — resume is the whole view ────────────────────────── */
+/* ── Workspace ─────────────────────────────────────────────────── */
 .workspace {
   flex: 1;
   overflow: hidden;
-  position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   min-width: 0;
   min-height: 0;
+}
+
+/* Left panel slot — width animates 0 → panel width */
+.toolPanelSlot {
+  width: 0;
+  flex-shrink: 0;
+  overflow: hidden;
+  transition: width 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.toolPanelSlotOpen {
+  width: var(--slot-width, 360px);
 }
 
 .resumeScroller {
@@ -192,16 +171,72 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 48px 40px;
+  padding: 52px 40px 72px;
   background: var(--canvas);
+  position: relative;
 }
 
-/* ── Loading overlay ─────────────────────────────────────────────── */
+/* Workspace grid */
+.workspaceGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.22;
+  pointer-events: none;
+}
+
+/* Page with corner marks */
+.pageDecorations {
+  position: relative;
+  display: inline-block;
+}
+
+.cornerMark {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--muted);
+  border-style: solid;
+  opacity: 0.45;
+}
+.tl { top: -7px; left: -7px; border-width: 1px 0 0 1px; }
+.tr { top: -7px; right: -7px; border-width: 1px 1px 0 0; }
+.bl { bottom: -7px; left: -7px; border-width: 0 0 1px 1px; }
+.br { bottom: -7px; right: -7px; border-width: 0 1px 1px 0; }
+
+/* ── Status bar ─────────────────────────────────────────────────── */
+.statusBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  height: 24px;
+  min-height: 24px;
+  background: var(--ink);
+  border-top: 1px solid #1a1a1a;
+  flex-shrink: 0;
+}
+
+.statusLeft, .statusRight {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-ui);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.35);
+}
+
+.statusFit { color: var(--lime); font-weight: 700; }
+
+/* ── Loading overlay ────────────────────────────────────────────── */
 .loadingOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(241, 241, 237, 0.82);
-  backdrop-filter: blur(2px);
+  background: rgba(243,243,239,0.85);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -209,60 +244,51 @@
 }
 
 .loadingCard {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  padding: 28px 32px;
+  background: var(--ink);
+  border: 1px solid #2a2a2a;
+  padding: 20px 26px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   text-align: center;
-  max-width: 300px;
-  box-shadow: var(--shadow-dropdown);
+  max-width: 260px;
 }
 
 .loadingCard p {
   margin: 0;
-  font-size: 13px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.1em;
   font-weight: 500;
-  color: var(--ink);
-  line-height: 1.5;
-}
-
-.mockLabel {
-  font-size: 11px !important;
-  font-weight: 400 !important;
-  color: var(--ink-muted) !important;
+  color: rgba(255,255,255,0.6);
+  text-transform: uppercase;
 }
 
 .spinner {
-  width: 22px;
-  height: 22px;
-  border: 1.5px solid var(--line);
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid #2a2a2a;
   border-top-color: var(--accent);
   border-radius: 50%;
-  animation: spin 0.75s linear infinite;
+  animation: spin 0.7s linear infinite;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Responsive ─────────────────────────────────────────────────── */
+@media (max-width: 1280px) {
+  .toolBtn { padding: 0 12px; font-size: 9.5px; }
 }
 
-/* ── Responsive: narrow screen — hide some toolbar items ─────────── */
-@media (max-width: 1023px) {
-  .toolbarActions { gap: 0; }
-  .toolBtn { padding: 0 10px; font-size: 12px; }
-  .resumeScroller { padding: 32px 24px; }
+@media (max-width: 1024px) {
+  .toolBtn { padding: 0 10px; font-size: 9px; }
 }
 
-@media (max-width: 767px) {
-  .toolbar { height: 48px; min-height: 48px; }
-  .toolbarBrand { padding: 0 14px; }
+@media (max-width: 768px) {
+  .toolbar { height: 44px; min-height: 44px; }
+  .toolbarBrand { padding: 0 12px; }
   .logo { font-size: 14px; }
-  .toolbarActions { padding: 0 8px; }
-  .toolbarStatus { padding: 0 8px; }
-  .toolbarRight { padding: 0 10px; gap: 6px; }
-  .resumeScroller { padding: 20px 12px; }
-  .fitStatus { font-size: 11px; padding: 4px 10px; }
+  .resumeScroller { padding: 28px 16px 56px; }
+  .statusBar { height: 20px; }
 }

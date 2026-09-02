@@ -8,7 +8,11 @@
   height: 11in;
   background: var(--paper);
   box-shadow: var(--shadow-paper);
-  padding: var(--resume-margin, 0.55in);
+  padding:
+    var(--resume-margin-top, var(--resume-margin, 0.55in))
+    var(--resume-margin-right, var(--resume-margin, 0.55in))
+    var(--resume-margin-bottom, var(--resume-margin, 0.55in))
+    var(--resume-margin-left, var(--resume-margin, 0.55in));
   box-sizing: border-box;
   font-family: var(--resume-font, var(--font-resume));
   font-size: var(--resume-font-size, 10pt);
@@ -19,7 +23,7 @@
 }
 
 .section {
-  margin-bottom: 0.1in;
+  margin-bottom: var(--resume-section-gap, 0.10in);
 }
 
 /* ── Section headers — four style variants ───────────────────── */

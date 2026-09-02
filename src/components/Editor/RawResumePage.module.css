@@ -1,0 +1,22 @@
+.wrapper {
+  transform-origin: top center;
+}
+
+/* The page shell — only provides size/shadow/bg. All inner styling comes from AI HTML. */
+.page {
+  width: 8.5in;
+  height: 11in;
+  background: white;
+  box-shadow: var(--shadow-paper);
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+  outline: none;
+  /* No padding — the AI HTML inner div controls its own padding */
+}
+
+/* In edit mode, show a subtle focus ring so user knows it's editable */
+.page:focus-within {
+  outline: 2px solid rgba(139, 92, 246, 0.25);
+  outline-offset: 2px;
+}

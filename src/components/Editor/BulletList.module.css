@@ -1,6 +1,6 @@
 .list {
   list-style: none;
-  padding: 0;
+  padding-left: var(--resume-bullet-indent, 0pt);
   margin: 0;
 }
 

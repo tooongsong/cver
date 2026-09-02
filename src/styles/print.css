@@ -1,37 +1,60 @@
 @media print {
   @page {
-    size: Letter portrait;
+    size: letter portrait;
     margin: 0;
   }
 
-  html,
-  body {
+  html, body {
     background: white !important;
     margin: 0 !important;
     padding: 0 !important;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+    overflow: visible !important;
+    height: auto !important;
+    width: 8.5in !important;
   }
 
-  /* Hide everything except the resume page */
-  body > #root > * {
+  #root {
+    overflow: visible !important;
+    height: auto !important;
+    display: block !important;
+  }
+
+  /* Hide ALL app chrome */
+  header,
+  footer,
+  nav,
+  aside,
+  [data-print="hide"],
+  .app-status-bar,
+  .app-toolbar,
+  .drawer-backdrop,
+  .drawer-panel {
     display: none !important;
   }
 
-  .print-root {
+  /* Show only workspace/resume */
+  .app-workspace {
+    overflow: visible !important;
+    padding: 0 !important;
+    background: white !important;
     display: block !important;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 8.5in;
-    height: 11in;
-    overflow: hidden;
   }
 
-  .resume-page-wrapper {
-    transform: none !important;
+  .resume-scroller {
+    padding: 0 !important;
+    overflow: visible !important;
+    background: white !important;
+    display: block !important;
   }
 
+  .page-corner-marks,
+  .workspace-grid {
+    display: none !important;
+  }
+
+  /* The actual resume page */
   .resume-page {
     width: 8.5in !important;
     height: 11in !important;
@@ -39,26 +62,28 @@
     box-shadow: none !important;
     transform: none !important;
     border-radius: 0 !important;
+    margin: 0 !important;
     page-break-inside: avoid;
-    overflow: hidden;
+    break-inside: avoid;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+    overflow: hidden !important;
   }
 
-  /* Hide all editor chrome */
-  .editable-text-controls,
-  .bullet-actions,
-  .section-controls,
-  .add-bullet-btn,
-  [data-print="hide"] {
-    display: none !important;
-  }
-
-  /* Editable text renders cleanly in print */
+  /* Clean editable text in print */
+  [contenteditable],
   .editable-text-display {
     cursor: default !important;
+    outline: none !important;
     border: none !important;
     background: transparent !important;
     padding: 0 !important;
+  }
+
+  /* Hide editor controls */
+  [data-print="hide"],
+  .bullet-actions,
+  .add-bullet-btn {
+    display: none !important;
   }
 }

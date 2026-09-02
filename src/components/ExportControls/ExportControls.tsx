@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { ResumeData } from '../../types/resume';
-import type { ResumeChange, TruthfulnessWarning, PreflightResult } from '../../types/tailor';
+import type { ResumeChange, TruthfulnessWarning } from '../../types/tailor';
 import { runPreflight } from '../../services/fitService';
 import styles from './ExportControls.module.css';
 
@@ -11,81 +11,80 @@ type Props = {
 };
 
 export function ExportControls({ resume, proposedChanges, warnings }: Props) {
-  const [preflight, setPreflight] = useState<PreflightResult | null>(null);
-  const [showPreflight, setShowPreflight] = useState(false);
-
-  const getPageEl = (): HTMLElement | null =>
-    document.querySelector('.resume-page');
+  const [showGuide, setShowGuide] = useState(false);
+  const [issues, setIssues] = useState<string[]>([]);
+  const [printing, setPrinting] = useState(false);
 
   const handleExport = () => {
-    const pageEl = getPageEl();
+    const pageEl = document.querySelector<HTMLElement>('.resume-page');
     if (!pageEl) return;
 
     const result = runPreflight(pageEl, proposedChanges, warnings);
-    setPreflight(result);
-    setShowPreflight(true);
-
-    if (result.passed) {
-      window.print();
-    }
+    const failed = result.checks.filter((c) => !c.passed).map((c) => c.detail ?? c.name);
+    setIssues(failed);
+    setShowGuide(true);
   };
 
-  const handleCopyText = () => {
-    const text = [
+  const handlePrint = () => {
+    setShowGuide(false);
+    setPrinting(true);
+    setTimeout(() => { window.print(); setPrinting(false); }, 60);
+  };
+
+  const handleCopy = () => {
+    const lines = [
       resume.personalInfo.name,
       resume.personalInfo.title,
-      `${resume.personalInfo.email} | ${resume.personalInfo.phone} | ${resume.personalInfo.location}`,
+      [resume.personalInfo.email, resume.personalInfo.phone, resume.personalInfo.location].filter(Boolean).join(' · '),
       '',
       resume.summary,
       '',
       ...resume.experience.flatMap((e) => [
-        `${e.title} — ${e.company} (${e.startDate} – ${e.endDate})`,
+        `${e.title} — ${e.company} (${e.startDate}–${e.endDate})`,
         ...e.bullets.map((b) => `• ${b.text}`),
         '',
       ]),
-      ...resume.education.map(
-        (e) => `${e.institution} — ${e.degree} ${e.field} (${e.startDate} – ${e.endDate})`
+      ...resume.education.map((e) =>
+        `${e.institution} — ${e.degree} ${e.field} (${e.startDate}–${e.endDate})`
       ),
       '',
       ...resume.skills.map((g) => `${g.category}: ${g.skills.join(', ')}`),
     ].join('\n');
-
-    navigator.clipboard.writeText(text).catch(() => {});
+    navigator.clipboard.writeText(lines).catch(() => {});
   };
 
   return (
     <div className={styles.wrapper}>
-      <button className={styles.btnExport} onClick={handleExport}>
-        Export PDF
-      </button>
-      <button className={styles.btnSecondary} onClick={handleCopyText}>
-        Copy text
+      <button className={styles.btnCopy} onClick={handleCopy} title="Copy as plain text">COPY</button>
+      <button className={styles.btnExport} onClick={handleExport} disabled={printing}>
+        {printing ? 'PRINTING…' : 'EXPORT PDF ↗'}
       </button>
 
-      {showPreflight && preflight && (
-        <div className={`${styles.preflightPanel} ${preflight.passed ? styles.passed : styles.failed}`}>
-          <div className={styles.preflightHeader}>
-            <span className={styles.preflightTitle}>
-              {preflight.passed ? 'Ready to export' : 'Cannot export yet'}
-            </span>
-            <button className={styles.closeBtn} onClick={() => setShowPreflight(false)}>✕</button>
+      {showGuide && (
+        <div className={styles.guide}>
+          <div className={styles.guideHead}>
+            <span className={styles.guideTitle}>EXPORT PDF</span>
+            <button className={styles.closeBtn} onClick={() => setShowGuide(false)}>✕</button>
           </div>
-          <ul className={styles.checkList}>
-            {preflight.checks.map((check) => (
-              <li key={check.name} className={check.passed ? styles.checkPassed : styles.checkFailed}>
-                <span className={styles.checkIcon}>{check.passed ? '✓' : '✗'}</span>
-                <span className={styles.checkName}>{check.name}</span>
-                {check.detail && !check.passed && (
-                  <span className={styles.checkDetail}>{check.detail}</span>
-                )}
-              </li>
-            ))}
-          </ul>
-          {preflight.passed && (
-            <p className={styles.printNote}>
-              Printing. The PDF contains only the resume.
-            </p>
+
+          {issues.length > 0 && (
+            <div className={styles.issueList}>
+              {issues.map((msg, i) => <p key={i} className={styles.issueItem}>⚠ {msg}</p>)}
+            </div>
           )}
+
+          <div className={styles.instructions}>
+            <p className={styles.instructLabel}>PRINT SETTINGS</p>
+            <ol className={styles.steps}>
+              <li>Destination → <strong>Save as PDF</strong></li>
+              <li>Paper size → <strong>Letter</strong></li>
+              <li>Margins → <strong>None</strong></li>
+              <li>Scale → <strong>100%</strong></li>
+              <li>Headers &amp; footers → <strong>Off</strong></li>
+            </ol>
+          </div>
+
+          <button className={styles.printBtn} onClick={handlePrint}>OPEN PRINT DIALOG ↗</button>
         </div>
       )}
     </div>

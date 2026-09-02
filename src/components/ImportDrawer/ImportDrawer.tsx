@@ -1,10 +1,12 @@
 import { useState, useRef } from 'react';
 import type { ResumeData } from '../../types/resume';
-import { importFile, type ImportResult } from '../../services/importService';
+import type { LayoutSchema } from '../../types/layout';
+import type { ImportResult } from '../../services/importService';
+import { importFile } from '../../services/importService';
 import styles from './ImportDrawer.module.css';
 
 type Props = {
-  onLoad: (resume: ResumeData, styleOverrides: Record<string, string>) => void;
+  onLoad: (resume: ResumeData, styleOverrides: Record<string, string>, layout: LayoutSchema, rawHtml?: string) => void;
 };
 
 type State =
@@ -16,7 +18,6 @@ type State =
 export function ImportDrawer({ onLoad }: Props) {
   const [state, setState] = useState<State>({ phase: 'idle' });
   const inputRef = useRef<HTMLInputElement>(null);
-  const dropRef = useRef<HTMLDivElement>(null);
 
   async function handleFile(file: File) {
     setState({ phase: 'loading' });
@@ -31,7 +32,6 @@ export function ImportDrawer({ onLoad }: Props) {
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) handleFile(file);
-    // Reset so same file can be re-selected
     e.target.value = '';
   }
 
@@ -43,7 +43,7 @@ export function ImportDrawer({ onLoad }: Props) {
 
   function handleApply() {
     if (state.phase !== 'preview') return;
-    onLoad(state.result.resume, state.result.styleOverrides as Record<string, string>);
+    onLoad(state.result.resume, state.result.styleOverrides, state.result.layout, state.result.rawHtml);
   }
 
   const confidenceLabel: Record<string, string> = {
@@ -59,9 +59,7 @@ export function ImportDrawer({ onLoad }: Props) {
 
   return (
     <div className={styles.wrapper}>
-      {/* Drop zone / trigger */}
       <div
-        ref={dropRef}
         className={styles.dropZone}
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
@@ -70,7 +68,7 @@ export function ImportDrawer({ onLoad }: Props) {
         <input
           ref={inputRef}
           type="file"
-          accept=".docx,.txt"
+          accept=".docx,.txt,.pdf,.jpg,.jpeg,.png,.webp"
           className={styles.hiddenInput}
           onChange={handleInputChange}
         />
@@ -84,7 +82,7 @@ export function ImportDrawer({ onLoad }: Props) {
                 ? 'Drop another file to replace'
                 : 'Drop your resume here, or click to browse'}
             </p>
-            <p className={styles.dropHint}>DOCX or TXT</p>
+            <p className={styles.dropHint}>DOCX · PDF · JPG · PNG</p>
           </>
         )}
       </div>
@@ -131,18 +129,15 @@ export function ImportDrawer({ onLoad }: Props) {
                   : undefined
               }
             />
-            {Object.keys(state.result.styleOverrides).length > 0 && (
-              <PreviewRow
-                label="Style"
-                value={[
-                  state.result.styleOverrides['--resume-font'] ? 'Font detected' : null,
-                  state.result.styleOverrides['--resume-accent'] ? 'Color detected' : null,
-                  state.result.styleOverrides['--resume-margin'] ? 'Margins detected' : null,
-                ]
-                  .filter(Boolean)
-                  .join(' · ')}
-              />
-            )}
+            <PreviewRow
+              label="Layout"
+              value={[
+                `${state.result.layout.columns === 2 ? '2-column' : '1-column'}`,
+                state.result.layout.bodySize,
+                state.result.layout.margins.left !== '0.55in' ? `${state.result.layout.margins.left} margins` : null,
+                state.result.layout.showDividers ? 'dividers' : 'no dividers',
+              ].filter(Boolean).join(' · ')}
+            />
           </div>
 
           {state.result.warnings.length > 0 && (
@@ -164,15 +159,18 @@ export function ImportDrawer({ onLoad }: Props) {
 
       {state.phase === 'idle' && (
         <div className={styles.tips}>
-          <p className={styles.tipTitle}>What gets detected</p>
+          <p className={styles.tipTitle}>What gets preserved</p>
           <ul className={styles.tipList}>
-            <li>Contact information and title</li>
-            <li>Work experience with dates and bullets</li>
-            <li>Education, skills, and languages</li>
-            <li>Font family, accent color, and margins (DOCX only)</li>
+            <li>Font family, size, and line height</li>
+            <li>Page margins (all four sides)</li>
+            <li>Section order as it appears in your file</li>
+            <li>Section spacing and entry gaps</li>
+            <li>Heading style (uppercase, dividers)</li>
+            <li>Accent color from document theme</li>
           </ul>
           <p className={styles.tipNote}>
-            PDF import is not supported yet. Export your resume as DOCX from Word or Google Docs.
+            DOCX: full layout extraction from document XML.<br />
+            PDF / image: AI-powered layout detection (requires API key).
           </p>
         </div>
       )}

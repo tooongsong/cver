@@ -1,69 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Roboto+Condensed:wght@400;700;900&display=swap');
+
 :root {
-  /* ── Canvas & surface ────────────────────── */
-  --canvas: #f1f1ed;
-  --canvas-deep: #e7e7e2;
+  /* Canvas */
+  --canvas: #F3F3EF;
+  --surface: #FAFAF7;
+  --paper: #FFFFFF;
 
-  --paper: #ffffff;
-  --surface: #ffffff;
-  --surface-soft: #f7f7f4;
-  --surface-pressed: #efefeb;
+  /* Text */
+  --ink: #0A0A0A;
+  --ink-secondary: #3A3A35;
+  --ink-soft: #3A3A35;
+  --muted: #686860;
+  --ink-muted: #686860;
 
-  /* ── Typography ──────────────────────────── */
-  --ink: #171717;
-  --ink-soft: #454541;
-  --ink-secondary: #454541;
-  --ink-muted: #85857f;
+  /* Lines */
+  --line: #D7D7CF;
+  --line-soft: #E5E5E0;
+  --line-dark: #0A0A0A;
+  --border: #D7D7CF;
+  --border-strong: #0A0A0A;
 
-  /* ── Lines / borders ─────────────────────── */
-  --line: #c8c8c0;
-  --line-soft: #dcdcd6;
-  --line-dark: #202020;
-  --border: #dcdcd6;
-  --border-strong: #202020;
+  /* Brand */
+  --accent: #8B5CF6;
+  --accent-hover: #6D35E8;
+  --accent-soft: #F3EFFF;
+  --accent-ink: #FFFFFF;
+  --accent-border: rgba(139, 92, 246, 0.25);
 
-  /* ── Accent (electric blue) ──────────────── */
-  --accent: #1738f5;
-  --accent-hover: #102dd5;
-  --accent-soft: #e6eaff;
-  --accent-ink: #ffffff;
+  --lime: #D8FF38;
+  --lime-dark: #A8CC00;
+  --warning: #FF5C45;
+  --warning-soft: #FFF0EE;
 
-  /* ── Semantic ────────────────────────────── */
-  --success: #387358;
-  --success-soft: #eaf4ed;
+  --success: #2D7A4F;
+  --success-soft: #E8F5EE;
+  --danger: #CC3B2F;
+  --danger-soft: #FDECEA;
 
-  --warning: #91691a;
-  --warning-soft: #fff3d6;
-
-  --danger: #ae4b45;
-  --danger-soft: #fdecea;
-
-  /* ── Shape ───────────────────────────────── */
-  --radius-control: 9px;
-  --radius-card: 14px;
-  --radius-large: 20px;
-  --radius-pill: 999px;
-
-  /* ── Shadows ─────────────────────────────── */
-  --shadow-paper: 0 18px 50px rgba(18, 18, 18, 0.11);
-  --shadow-card: 0 3px 12px rgba(18, 18, 18, 0.06);
-  --shadow-dropdown: 0 10px 32px rgba(18, 18, 18, 0.13);
-
-  /* ── Backward-compat aliases ─────────────── */
-  --bg: var(--canvas);
-  --bg-panel: var(--surface);
-  --text-primary: var(--ink);
-  --text-secondary: var(--ink-secondary);
-  --text-muted: var(--ink-muted);
-  --line-strong: var(--border-strong);
-  --radius: var(--radius-control);
-  --radius-sm: 7px;
-  --radius-md: var(--radius-card);
-  --radius-lg: var(--radius-large);
-  --border-light: var(--line-soft);
-  --accent-light: var(--accent-soft);
-  --accent-border: rgba(23, 56, 245, 0.22);
-
-  /* ── AI diff colors ──────────────────────── */
+  /* AI diff */
   --ai-add-bg: var(--success-soft);
   --ai-add-text: var(--success);
   --ai-add-border: #b6d9c4;
@@ -72,11 +46,44 @@
   --ai-remove-border: #f0c6c3;
   --ai-keyword-bg: var(--accent-soft);
   --ai-keyword-text: var(--accent);
-
   --risk-blocked-bg: var(--danger-soft);
   --risk-review-bg: var(--warning-soft);
 
-  /* ── Spacing scale ───────────────────────── */
+  /* Shape */
+  --radius-control: 2px;
+  --radius-card: 3px;
+  --radius-large: 4px;
+  --radius-pill: 999px;
+  --radius: 2px;
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+
+  /* Shadows */
+  --shadow-paper: 0 2px 20px rgba(0,0,0,0.10);
+  --shadow-card: 0 1px 4px rgba(0,0,0,0.06);
+  --shadow-dropdown: 0 4px 16px rgba(0,0,0,0.14);
+
+  /* Typography */
+  --font-display: "Roboto Condensed", "Arial Narrow", Arial, sans-serif;
+  --font-ui: "IBM Plex Mono", "SFMono-Regular", "Courier New", monospace;
+  --font-body: Inter, Arial, sans-serif;
+  --font-resume: Inter, "Calibri", Arial, sans-serif;
+
+  /* Backward compat */
+  --bg: var(--canvas);
+  --bg-panel: var(--surface);
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink-secondary);
+  --text-muted: var(--muted);
+  --line-strong: var(--border-strong);
+  --border-light: var(--line-soft);
+  --accent-light: var(--accent-soft);
+
+  /* Transitions */
+  --transition: 100ms ease;
+
+  /* Spacing */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -85,14 +92,7 @@
   --space-6: 24px;
   --space-8: 32px;
 
-  /* ── Typography ──────────────────────────── */
-  --font-ui: 'Helvetica Neue', Helvetica, Arial, -apple-system,
-    BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-resume: Inter, 'Calibri', Arial, sans-serif;
-
-  --transition: 140ms ease;
-
-  /* ── Resume layout (overridden per template) ── */
+  /* Resume layout defaults */
   --resume-margin: 0.55in;
   --resume-font-size: 10pt;
   --resume-line-height: 1.45;

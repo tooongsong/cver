@@ -1,0 +1,155 @@
+.panel {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.sectionLabel {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+
+.resetBtn {
+  font: inherit;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  background: none;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  padding: 2px 8px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all var(--transition);
+}
+.resetBtn:hover { border-color: var(--ink); color: var(--ink); }
+
+.detected {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  background: var(--accent-soft);
+  border-bottom: 1px solid var(--accent-border);
+}
+
+.detectedBadge {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  background: var(--paper);
+  padding: 1px 5px;
+  border: 1px solid var(--accent-border);
+}
+
+.detectedVal {
+  font-size: 11px;
+  color: var(--ink);
+}
+
+.group { display: flex; flex-direction: column; }
+
+.divider { height: 1px; background: var(--line); }
+
+.fontRow, .numRow, .colorRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--line-soft);
+  min-height: 38px;
+}
+
+.rowLabel {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  flex-shrink: 0;
+  width: 76px;
+}
+
+.select {
+  flex: 1;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 4px 6px;
+  border-radius: 2px;
+  cursor: pointer;
+  min-width: 0;
+}
+.select:focus { outline: 1px solid var(--accent); border-color: var(--accent); }
+
+.nudge {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition);
+  line-height: 1;
+}
+.nudge:hover { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+
+.numVal {
+  font-size: 11px;
+  min-width: 46px;
+  text-align: center;
+  color: var(--ink);
+}
+
+.colorInput {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--line);
+  padding: 2px;
+  cursor: pointer;
+  border-radius: 2px;
+  background: none;
+  flex-shrink: 0;
+}
+
+.hexInput {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 4px 6px;
+  border-radius: 2px;
+  width: 78px;
+  flex-shrink: 0;
+}
+.hexInput:focus { outline: 1px solid var(--accent); border-color: var(--accent); }
+
+.detectedColorChip {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  cursor: pointer;
+  flex-shrink: 0;
+}

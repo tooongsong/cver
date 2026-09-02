@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import type { ResumeData } from '../../types/resume';
 import type { FitResult } from '../../types/tailor';
 import type { ResumeTemplate } from '../../data/templates';
+import type { LayoutSchema } from '../../types/layout';
+import { DEFAULT_LAYOUT } from '../../types/layout';
 import { PersonalInfoHeader } from './PersonalInfoHeader';
 import { ExperienceEntry } from './ExperienceEntry';
 import { EducationEntry } from './EducationEntry';
@@ -15,6 +17,7 @@ import entryStyles from './EntryRow.module.css';
 type Props = {
   resume: ResumeData;
   template: ResumeTemplate;
+  layout?: LayoutSchema;
   onUpdatePersonalInfo: (updates: Partial<ResumeData['personalInfo']>) => void;
   onUpdateSummary: (text: string) => void;
   onUpdateExperience: (id: string, updates: any) => void;
@@ -30,6 +33,7 @@ type Props = {
 export function ResumePage({
   resume,
   template,
+  layout,
   onUpdatePersonalInfo,
   onUpdateSummary,
   onUpdateExperience,
@@ -49,37 +53,23 @@ export function ResumePage({
     onFitChange(result);
   });
 
-  const sectionHeader = (title: string) => {
-    const style = template.sectionHeaderStyle;
-    return (
-      <div className={`${styles.sectionHeader} ${styles[`sectionHeader_${style}`]}`}
-           data-header-style={style}>
-        <span className={styles.sectionTitle}>{title}</span>
-        {style === 'rule' && <div className={styles.sectionRule} />}
-      </div>
-    );
-  };
+  // Layout drives section order and divider style; fall back to template + defaults
+  const sectionOrder = layout?.sectionOrder ?? DEFAULT_LAYOUT.sectionOrder;
+  const showDividers = layout?.showDividers ?? true;
+  const headerStyle = showDividers ? 'rule' : template.sectionHeaderStyle === 'rule' ? 'plain' : template.sectionHeaderStyle;
 
-  const cssVarStyle = { ...template.cssVars, ...styleOverrides } as React.CSSProperties;
+  const sectionHeader = (title: string) => (
+    <div className={`${styles.sectionHeader} ${styles[`sectionHeader_${headerStyle}`]}`}>
+      <span className={styles.sectionTitle}>{title}</span>
+      {headerStyle === 'rule' && <div className={styles.sectionRule} />}
+    </div>
+  );
 
-  return (
-    <div
-      className={styles.pageWrapper}
-      style={{
-        transform: scale !== 1 ? `scale(${scale})` : undefined,
-        transformOrigin: 'top center',
-      }}
-    >
-      <div
-        className={`${styles.page} resume-page`}
-        ref={contentRef}
-        data-template={template.id}
-        style={cssVarStyle}
-      >
-        <PersonalInfoHeader info={resume.personalInfo} onChange={onUpdatePersonalInfo} />
-
-        {resume.summary && (
-          <section className={styles.section} data-section="summary">
+  const renderSection = (sec: string) => {
+    switch (sec) {
+      case 'summary':
+        return resume.summary ? (
+          <section key="summary" className={styles.section} data-section="summary">
             {sectionHeader('Summary')}
             <EditableText
               value={resume.summary}
@@ -89,10 +79,11 @@ export function ResumePage({
               tag="p"
             />
           </section>
-        )}
+        ) : null;
 
-        {resume.experience.length > 0 && (
-          <section className={styles.section} data-section="experience">
+      case 'experience':
+        return resume.experience.length > 0 ? (
+          <section key="experience" className={styles.section} data-section="experience">
             {sectionHeader('Experience')}
             {resume.experience.map((exp) => (
               <ExperienceEntry
@@ -106,10 +97,11 @@ export function ResumePage({
               />
             ))}
           </section>
-        )}
+        ) : null;
 
-        {resume.projects.length > 0 && (
-          <section className={styles.section} data-section="projects">
+      case 'projects':
+        return resume.projects.length > 0 ? (
+          <section key="projects" className={styles.section} data-section="projects">
             {sectionHeader('Projects')}
             {resume.projects.map((proj) => (
               <div key={proj.id} className={entryStyles.entry} data-section="projects">
@@ -139,10 +131,11 @@ export function ResumePage({
               </div>
             ))}
           </section>
-        )}
+        ) : null;
 
-        {resume.education.length > 0 && (
-          <section className={styles.section} data-section="education">
+      case 'education':
+        return resume.education.length > 0 ? (
+          <section key="education" className={styles.section} data-section="education">
             {sectionHeader('Education')}
             {resume.education.map((edu) => (
               <EducationEntry
@@ -152,23 +145,49 @@ export function ResumePage({
               />
             ))}
           </section>
-        )}
+        ) : null;
 
-        {resume.skills.length > 0 && (
-          <section className={styles.section} data-section="skills">
+      case 'skills':
+        return resume.skills.length > 0 ? (
+          <section key="skills" className={styles.section} data-section="skills">
             {sectionHeader('Skills')}
             <SkillsSection groups={resume.skills} onChange={onUpdateSkillGroup} />
           </section>
-        )}
+        ) : null;
 
-        {resume.languages.length > 0 && (
-          <section className={styles.section} data-section="languages">
+      case 'languages':
+        return resume.languages.length > 0 ? (
+          <section key="languages" className={styles.section} data-section="languages">
             {sectionHeader('Languages')}
             <p className={styles.languages}>
               {resume.languages.map((l) => `${l.name} (${l.proficiency})`).join('  ·  ')}
             </p>
           </section>
-        )}
+        ) : null;
+
+      default:
+        return null;
+    }
+  };
+
+  const cssVarStyle = { ...template.cssVars, ...styleOverrides } as React.CSSProperties;
+
+  return (
+    <div
+      className={styles.pageWrapper}
+      style={{
+        transform: scale !== 1 ? `scale(${scale})` : undefined,
+        transformOrigin: 'top center',
+      }}
+    >
+      <div
+        className={`${styles.page} resume-page`}
+        ref={contentRef}
+        data-template={template.id}
+        style={cssVarStyle}
+      >
+        <PersonalInfoHeader info={resume.personalInfo} onChange={onUpdatePersonalInfo} />
+        {sectionOrder.map(renderSection)}
       </div>
     </div>
   );

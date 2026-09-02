@@ -198,7 +198,16 @@ function parseSkills(blocks: Block[]): ResumeData['skills'] {
   }, []);
 }
 
+export type ParsedResume = {
+  resume: ResumeData;
+  sectionOrder: string[];
+};
+
 export function parseResumeHtml(html: string): ResumeData {
+  return parseResumeHtmlFull(html).resume;
+}
+
+export function parseResumeHtmlFull(html: string): ParsedResume {
   const blocks = htmlToBlocks(html);
 
   // ── Name ───────────────────────────────────────────────
@@ -230,13 +239,19 @@ export function parseResumeHtml(html: string): ResumeData {
     }
   }
 
-  // ── Section split ──────────────────────────────────────
+  // ── Section split + order tracking ────────────────────
   const sections: Record<string, Block[]> = { header: [] };
+  const sectionOrder: string[] = [];
   let cur = 'header';
   for (const b of blocks) {
     const sec = detectSection(b);
-    if (sec) { cur = sec; sections[cur] = sections[cur] ?? []; }
-    else { (sections[cur] = sections[cur] ?? []).push(b); }
+    if (sec) {
+      cur = sec;
+      sections[cur] = sections[cur] ?? [];
+      if (!sectionOrder.includes(sec)) sectionOrder.push(sec);
+    } else {
+      (sections[cur] = sections[cur] ?? []).push(b);
+    }
   }
 
   // ── Summary ────────────────────────────────────────────
@@ -245,7 +260,6 @@ export function parseResumeHtml(html: string): ResumeData {
     summary = sections.summary.filter((b) => !b.bold).map((b) => b.text).join(' ').trim();
   }
   if (!summary && sections.header) {
-    // Look for a long non-contact paragraph in header area
     const s = sections.header.find(
       (b) => b !== nameBlock && b.text.length > 60 && !EMAIL.test(b.text) && !PHONE.test(b.text)
     );
@@ -265,7 +279,7 @@ export function parseResumeHtml(html: string): ResumeData {
     }
   }
 
-  return {
+  const resume: ResumeData = {
     personalInfo: {
       name,
       title,
@@ -282,6 +296,16 @@ export function parseResumeHtml(html: string): ResumeData {
     skills: sections.skills ? parseSkills(sections.skills) : [],
     languages,
   };
+
+  // Keep only sections ResumePage knows how to render
+  const KNOWN_SECTIONS = ['summary', 'experience', 'projects', 'education', 'skills', 'languages'];
+  const filteredOrder = sectionOrder.filter((s) => KNOWN_SECTIONS.includes(s));
+  // Append any known sections not yet in order (so nothing is lost)
+  for (const s of KNOWN_SECTIONS) {
+    if (!filteredOrder.includes(s)) filteredOrder.push(s);
+  }
+
+  return { resume, sectionOrder: filteredOrder };
 }
 
 // Parse plain text by inserting fake HTML tags based on heuristics
