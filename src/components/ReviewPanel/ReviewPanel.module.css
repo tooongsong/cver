@@ -1,0 +1,100 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.panelTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.count {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.bulkActions {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.btnAcceptAll, .btnRejectAll, .btnRestore {
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 6px 11px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  background: white;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.btnAcceptAll { color: var(--ai-add-text); border-color: var(--ai-add-border); }
+.btnAcceptAll:hover:not(:disabled) { background: var(--ai-add-bg); }
+.btnAcceptAll:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btnRejectAll { color: var(--ai-remove-text); border-color: var(--ai-remove-border); }
+.btnRejectAll:hover:not(:disabled) { background: var(--ai-remove-bg); }
+.btnRejectAll:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btnRestore { color: var(--text-secondary); }
+.btnRestore:hover { color: var(--accent-hover); border-color: var(--accent); }
+
+.warningBox, .reviewBox {
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.warningBox { background: var(--risk-blocked-bg); border: 1px solid var(--ai-remove-border); }
+.reviewBox  { background: var(--risk-review-bg); border: 1px solid #f0d080; }
+
+.warningTitle {
+  font-size: 11.5px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.warningText {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.empty {
+  padding: 28px 0;
+  text-align: center;
+}
+
+.empty p {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin: 0;
+}
+
+.changeList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}

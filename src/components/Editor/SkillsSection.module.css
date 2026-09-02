@@ -1,0 +1,19 @@
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5pt;
+}
+
+.group {
+  font-size: 9pt;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.category {
+  font-weight: 600;
+}
+
+.skills {
+  color: var(--text-primary);
+}

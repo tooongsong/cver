@@ -1,0 +1,51 @@
+/* Shared grid for Experience, Education, Project entries */
+.entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 2.1in;
+  grid-template-rows: auto auto;
+  column-gap: 0;
+  row-gap: 0;
+  margin-bottom: 0.08in;
+}
+
+.entryTitle {
+  grid-column: 1;
+  grid-row: 1;
+  font-weight: 600;
+  font-size: 10pt;
+  color: var(--text-primary);
+}
+
+.entryDate {
+  grid-column: 2;
+  grid-row: 1;
+  text-align: right;
+  white-space: nowrap;
+  font-size: 9pt;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.entryCompany {
+  grid-column: 1;
+  grid-row: 2;
+  font-size: 9pt;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.entryLocation {
+  grid-column: 2;
+  grid-row: 2;
+  text-align: right;
+  white-space: nowrap;
+  font-size: 9pt;
+  color: var(--text-secondary);
+}
+
+.entryBullets {
+  grid-column: 1 / -1;
+  margin-top: 2pt;
+  padding-left: 0;
+  list-style: none;
+}

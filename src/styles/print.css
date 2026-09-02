@@ -1,0 +1,64 @@
+@media print {
+  @page {
+    size: Letter portrait;
+    margin: 0;
+  }
+
+  html,
+  body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Hide everything except the resume page */
+  body > #root > * {
+    display: none !important;
+  }
+
+  .print-root {
+    display: block !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 8.5in;
+    height: 11in;
+    overflow: hidden;
+  }
+
+  .resume-page-wrapper {
+    transform: none !important;
+  }
+
+  .resume-page {
+    width: 8.5in !important;
+    height: 11in !important;
+    min-height: 11in !important;
+    box-shadow: none !important;
+    transform: none !important;
+    border-radius: 0 !important;
+    page-break-inside: avoid;
+    overflow: hidden;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Hide all editor chrome */
+  .editable-text-controls,
+  .bullet-actions,
+  .section-controls,
+  .add-bullet-btn,
+  [data-print="hide"] {
+    display: none !important;
+  }
+
+  /* Editable text renders cleanly in print */
+  .editable-text-display {
+    cursor: default !important;
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+}

@@ -1,0 +1,43 @@
+.header {
+  text-align: center;
+  margin-bottom: 0.18in;
+  padding-bottom: 0.1in;
+  border-bottom: 1.5px solid var(--text-primary);
+}
+
+.name {
+  font-size: var(--resume-name-size, 18pt);
+  font-weight: var(--resume-name-weight, 700);
+  letter-spacing: 0.01em;
+  color: var(--text-primary);
+  margin: 0 0 2pt;
+  line-height: 1.2;
+  font-family: inherit;
+}
+
+.jobTitle {
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin: 0 0 4pt;
+  letter-spacing: 0.03em;
+  font-size: calc(var(--resume-font-size, 10pt) * 0.85);
+}
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0 4pt;
+  font-size: calc(var(--resume-font-size, 10pt) * 0.85);
+  color: var(--text-secondary);
+}
+
+.contactItem {
+  white-space: nowrap;
+}
+
+.sep {
+  color: var(--text-muted);
+  user-select: none;
+}

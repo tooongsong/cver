@@ -1,0 +1,86 @@
+.pageWrapper {
+  transform-origin: top center;
+}
+
+.page {
+  width: 8.5in;
+  min-height: 11in;
+  height: 11in;
+  background: var(--paper);
+  box-shadow: var(--shadow-paper);
+  padding: var(--resume-margin, 0.55in);
+  box-sizing: border-box;
+  font-family: var(--resume-font, var(--font-resume));
+  font-size: var(--resume-font-size, 10pt);
+  line-height: var(--resume-line-height, 1.45);
+  color: var(--text-primary);
+  overflow: hidden;
+  position: relative;
+}
+
+.section {
+  margin-bottom: 0.1in;
+}
+
+/* ── Section headers — four style variants ───────────────────── */
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 6pt;
+  margin-bottom: 4pt;
+}
+
+/* rule (default): label + full-width horizontal line */
+.sectionHeader_rule {
+  /* default layout already set */
+}
+
+.sectionRule {
+  flex: 1;
+  height: 1px;
+  background: var(--resume-rule-color, rgba(26, 26, 26, 0.25));
+}
+
+/* border-left: no rule, label has left color bar */
+.sectionHeader_border-left {
+  border-left: 3px solid var(--resume-accent, #c47a2b);
+  padding-left: 6pt;
+  gap: 0;
+}
+
+/* overline: thin top border across the full width */
+.sectionHeader_overline {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2pt;
+  border-top: 1.5px solid var(--resume-accent, #c47a2b);
+  padding-top: 3pt;
+}
+
+/* plain: just the label, no decoration */
+.sectionHeader_plain {
+  gap: 0;
+}
+
+.sectionTitle {
+  font-size: var(--resume-section-title-size, 9pt);
+  font-weight: 700;
+  text-transform: var(--resume-section-title-transform, uppercase) !important;
+  letter-spacing: var(--resume-section-title-spacing, 0.08em);
+  color: var(--resume-section-title-color, var(--text-primary));
+  white-space: nowrap;
+}
+
+.summary {
+  font-size: calc(var(--resume-font-size, 10pt) * 0.95);
+  color: var(--text-primary);
+  margin: 0;
+  line-height: var(--resume-line-height, 1.5);
+}
+
+.languages {
+  font-size: calc(var(--resume-font-size, 10pt) * 0.9);
+  color: var(--text-primary);
+  margin: 0;
+}

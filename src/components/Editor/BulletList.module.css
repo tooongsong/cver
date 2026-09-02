@@ -1,0 +1,31 @@
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 4pt;
+  margin-bottom: 1.5pt;
+  font-size: var(--resume-font-size);
+  line-height: var(--resume-line-height);
+  color: var(--text-primary);
+}
+
+.bullet {
+  flex-shrink: 0;
+  margin-top: 0.5pt;
+  color: var(--text-secondary);
+  user-select: none;
+}
+
+.text {
+  flex: 1;
+}
+
+.highlighted {
+  background: rgba(255, 220, 120, 0.15);
+  border-radius: var(--radius-sm);
+}

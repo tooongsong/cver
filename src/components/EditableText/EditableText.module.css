@@ -1,0 +1,36 @@
+.display {
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition);
+  display: inline;
+}
+
+.display:hover {
+  background: rgba(196, 122, 43, 0.08);
+  outline: 1px dashed rgba(196, 122, 43, 0.35);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  background: rgba(196, 122, 43, 0.05);
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 1px 4px;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.textarea {
+  display: block;
+  line-height: inherit;
+  min-height: 3em;
+}
+
+.placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+}

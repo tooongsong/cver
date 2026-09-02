@@ -1,0 +1,179 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  font-family: var(--font-ui);
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+/* ── Top bar ──────────────────────────────────────────────────── */
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 52px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+.topBarLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.mockBadge {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--accent-hover);
+  background: var(--accent-light);
+  border: 1px solid var(--accent-border);
+  padding: 2px 9px;
+  border-radius: var(--radius-pill);
+}
+
+.topBarRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── Mobile tabs ─────────────────────────────────────────────── */
+.mobileTabs {
+  display: none;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.mobileTab {
+  flex: 1;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 11px 0;
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all var(--transition);
+}
+
+.mobileTabActive {
+  color: var(--text-primary);
+  border-bottom-color: var(--accent);
+}
+
+/* ── Workspace ───────────────────────────────────────────────── */
+.workspace {
+  display: grid;
+  grid-template-columns: 290px 1fr 308px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.sidePanel {
+  padding: 16px 14px;
+  overflow-y: auto;
+  background: var(--bg-panel);
+}
+
+.panelLeft {
+  border-right: 1px solid var(--border);
+}
+
+.panelRight {
+  border-left: 1px solid var(--border);
+}
+
+.editorArea {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  background: var(--bg);
+}
+
+.resumeScroller {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 36px 28px;
+}
+
+/* ── Loading overlay ─────────────────────────────────────────── */
+.loadingOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(245, 245, 240, 0.82);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.loadingCard {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  max-width: 300px;
+  box-shadow: var(--shadow-dropdown);
+}
+
+.loadingCard p {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.mockLabel {
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  color: var(--text-muted) !important;
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 2.5px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .workspace { grid-template-columns: 1fr; }
+  .mobileTabs { display: flex; }
+  .hiddenMobile { display: none; }
+  .sidePanel { border-right: none; border-left: none; }
+}

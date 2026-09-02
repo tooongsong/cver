@@ -1,0 +1,16 @@
+.indicator {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 8px 11px;
+  border-radius: var(--radius);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.ok  { background: var(--ai-add-bg); color: var(--ai-add-text); }
+.warn { background: var(--risk-review-bg); color: #7a5500; }
+
+.icon { flex-shrink: 0; font-size: 11px; margin-top: 1px; }
+.label { font-weight: 600; white-space: nowrap; }
+.detail { font-size: 11px; opacity: 0.85; line-height: 1.4; }

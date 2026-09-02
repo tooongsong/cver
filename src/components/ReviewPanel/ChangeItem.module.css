@@ -1,0 +1,197 @@
+.item {
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius);
+  background: white;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.risk_blocked { border-left: 3px solid var(--ai-remove-text); }
+.risk_review  { border-left: 3px solid var(--accent); }
+.risk_safe    { border-left: 3px solid var(--ai-add-text); }
+.status_rejected { opacity: 0.55; }
+
+.headerBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 11px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  gap: 8px;
+}
+.headerBtn:hover { background: rgba(0,0,0,0.02); }
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 1;
+  min-width: 0;
+}
+
+.riskDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot_safe    { background: var(--ai-add-text); }
+.dot_review  { background: var(--accent); }
+.dot_blocked { background: var(--ai-remove-text); }
+
+.fieldLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+.typeChip {
+  font-size: 10px;
+  font-weight: 500;
+  background: var(--bg);
+  color: var(--text-muted);
+  padding: 2px 7px;
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.statusChip {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+.statusChip_pending  { background: #f0f0ee; color: var(--text-secondary); }
+.statusChip_accepted { background: var(--ai-add-bg); color: var(--ai-add-text); }
+.statusChip_rejected { background: var(--ai-remove-bg); color: var(--ai-remove-text); }
+.statusChip_edited   { background: var(--accent-light); color: var(--accent-hover); }
+
+.chevron { font-size: 9px; color: var(--text-muted); }
+
+.body {
+  padding: 0 11px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.riskBanner {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 9px;
+  border-radius: var(--radius-sm);
+  margin: 0;
+}
+.riskBanner_review  { background: var(--risk-review-bg); color: #7a5500; }
+.riskBanner_blocked { background: var(--risk-blocked-bg); color: var(--ai-remove-text); }
+
+.reason {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.55;
+}
+
+.evidenceGroup { display: flex; flex-direction: column; gap: 3px; }
+
+.evidenceLabel {
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.evidenceText {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin: 0;
+  padding-left: 8px;
+  border-left: 2px solid var(--border);
+}
+
+.editArea { display: flex; flex-direction: column; gap: 7px; }
+
+.editTextarea {
+  font: inherit;
+  font-size: 11.5px;
+  line-height: 1.55;
+  padding: 7px 9px;
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius);
+  resize: vertical;
+  outline: none;
+  color: var(--text-primary);
+  background: white;
+}
+
+.editActions { display: flex; gap: 6px; }
+
+.actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.btnAccept, .btnReject, .btnEdit, .btnUndo,
+.btnSave, .btnCancel {
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 5px 11px;
+  border-radius: var(--radius);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition);
+  letter-spacing: -0.01em;
+}
+
+.btnAccept {
+  background: var(--text-primary);
+  color: white;
+  border-color: var(--text-primary);
+}
+.btnAccept:hover:not(:disabled) { background: #333; border-color: #333; }
+.btnAccept:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.btnReject {
+  background: white;
+  color: var(--ai-remove-text);
+  border-color: var(--ai-remove-border);
+}
+.btnReject:hover { background: var(--ai-remove-bg); }
+
+.btnEdit, .btnUndo, .btnCancel {
+  background: var(--bg);
+  color: var(--text-secondary);
+  border-color: var(--border);
+}
+.btnEdit:hover, .btnUndo:hover, .btnCancel:hover {
+  border-color: var(--accent);
+  color: var(--accent-hover);
+  background: var(--accent-light);
+}
+
+.btnSave {
+  background: var(--ai-add-bg);
+  color: var(--ai-add-text);
+  border-color: var(--ai-add-border);
+}
+.btnSave:hover { background: #d8f0e4; }
