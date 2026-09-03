@@ -16,9 +16,12 @@ import { ExportControls } from './components/ExportControls/ExportControls';
 import { VersionSwitcher } from './components/VersionSwitcher/VersionSwitcher';
 import { FontsPanel } from './components/FontsPanel/FontsPanel';
 import type { DetectedFonts } from './services/fontDetector';
+import { TemplatesPanel } from './components/TemplatesPanel/TemplatesPanel';
+import { analyzeResume, type ResumeSignals } from './services/resumeAnalyzer';
+import type { TemplatePreset } from './services/templates';
 import styles from './App.module.css';
 
-type DrawerType = 'import' | 'jd' | 'changes' | 'paste' | 'type' | 'fonts' | 'more' | null;
+type DrawerType = 'import' | 'jd' | 'changes' | 'paste' | 'type' | 'fonts' | 'templates' | 'more' | null;
 type AppPhase = 'landing' | 'editor';
 
 export default function App() {
@@ -32,6 +35,11 @@ export default function App() {
   const [detectedFonts, setDetectedFonts] = useState<DetectedFonts>({ used: [], missing: [] });
   const [fontOverrides, setFontOverrides] = useState<Record<string, string>>({});
   const [fontReloadKey, setFontReloadKey] = useState(0);
+  const [resumeSignals, setResumeSignals] = useState<ResumeSignals | null>(null);
+  const [templateOverrides, setTemplateOverrides] = useState<Record<string, string>>({});
+  const [activeTemplateId, setActiveTemplateId] = useState<string | null>(null);
+  const [savedDocxBuffer, setSavedDocxBuffer] = useState<ArrayBuffer | null>(null);
+  const [savedRawHtml, setSavedRawHtml] = useState<string | null>(null);
 
   const pendingCount = editor.proposedChanges.filter((c) => c.status === 'pending').length;
   const totalChanges = editor.proposedChanges.length;
@@ -49,6 +57,7 @@ export default function App() {
 
   function getPanelWidth(d: DrawerType): number {
     if (d === 'type' || d === 'more' || d === 'fonts') return 320;
+    if (d === 'templates') return 360;
     return 420;
   }
 
@@ -57,6 +66,7 @@ export default function App() {
     layout?: LayoutSchema,
     html?: string,
     buffer?: ArrayBuffer,
+    resume?: import('./types/resume').ResumeData,
   ) {
     const fontRaw = styleOverrides['--resume-font'] ?? '';
     const detFont = fontRaw.replace(/['"]/g, '').split(',')[0].trim();
@@ -76,6 +86,28 @@ export default function App() {
     if (layout) setImportedLayout(layout);
     setRawHtml(html ?? null);
     setDocxBuffer(buffer ?? null);
+    // Fresh import → clear any previously applied template + reset template state
+    setSavedDocxBuffer(buffer ?? null);
+    setSavedRawHtml(html ?? null);
+    setTemplateOverrides({});
+    setActiveTemplateId(null);
+    setResumeSignals(resume ? analyzeResume(resume) : null);
+  }
+
+  function applyTemplate(preset: TemplatePreset) {
+    // Switching to a template hides the imported original renderer and shows
+    // the structured ResumePage template with the preset's overrides.
+    setTemplateOverrides(preset.styleOverrides);
+    setActiveTemplateId(preset.id);
+    setDocxBuffer(null);
+    setRawHtml(null);
+  }
+
+  function keepImportedOriginal() {
+    setTemplateOverrides({});
+    setActiveTemplateId(null);
+    setDocxBuffer(savedDocxBuffer);
+    setRawHtml(savedRawHtml);
   }
 
   // Build typography CSS overrides
@@ -89,7 +121,8 @@ export default function App() {
     '--resume-accent': typography.accentColor,
   };
 
-  const combinedOverrides = { ...editor.importedStyleOverrides, ...typographyOverrides };
+  // Precedence: imported doc → user typography → applied template (highest, since user just picked it)
+  const combinedOverrides = { ...editor.importedStyleOverrides, ...typographyOverrides, ...templateOverrides };
 
   const detectedFont = (() => {
     const raw = editor.importedStyleOverrides['--resume-font'] ?? '';
@@ -102,7 +135,7 @@ export default function App() {
       <LandingPage
         onLoad={(resume, styleOverrides, layout, html, buffer) => {
           editor.loadNewResume(resume, styleOverrides);
-          applyImportedStyle(styleOverrides, layout, html, buffer);
+          applyImportedStyle(styleOverrides, layout, html, buffer, resume);
           setAppPhase('editor');
         }}
         onUseSample={() => setAppPhase('editor')}
@@ -145,6 +178,12 @@ export default function App() {
             {detectedFonts.missing.length > 0 && (
               <span className={styles.toolBtnBadge}>{detectedFonts.missing.length}</span>
             )}
+          </button>
+          <button
+            className={`${styles.toolBtn} ${openDrawer === 'templates' ? styles.toolBtnActive : ''}`}
+            onClick={() => toggleDrawer('templates')}
+          >
+            TEMPLATES
           </button>
           <button
             className={`${styles.toolBtn} ${openDrawer === 'jd' ? styles.toolBtnActive : ''}`}
@@ -201,7 +240,7 @@ export default function App() {
               <ImportDrawer
                 onLoad={(resume, styleOverrides, layout, html, buffer) => {
                   editor.loadNewResume(resume, styleOverrides);
-                  applyImportedStyle(styleOverrides, layout, html, buffer);
+                  applyImportedStyle(styleOverrides, layout, html, buffer, resume);
                   setOpenDrawer(null);
                 }}
               />
@@ -237,6 +276,17 @@ export default function App() {
                   });
                 }}
                 onFontLoaded={() => setFontReloadKey((k) => k + 1)}
+              />
+            </ToolPanel>
+          )}
+          {openDrawer === 'templates' && (
+            <ToolPanel title="TEMPLATES" onClose={() => setOpenDrawer(null)}>
+              <TemplatesPanel
+                signals={resumeSignals}
+                onApply={applyTemplate}
+                hasImportedOriginal={!!(savedDocxBuffer || savedRawHtml)}
+                onKeepOriginal={keepImportedOriginal}
+                activeTemplateId={activeTemplateId}
               />
             </ToolPanel>
           )}
