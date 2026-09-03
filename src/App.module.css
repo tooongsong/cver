@@ -92,6 +92,22 @@
   flex-shrink: 0;
 }
 
+.toolBtnBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 4px;
+  margin-left: 6px;
+  background: #f59e0b;
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  border-radius: 2px;
+  letter-spacing: 0;
+}
+
 .toolbarSpacer { flex: 1 1 auto; min-width: 0; }
 
 /* Fit badge */

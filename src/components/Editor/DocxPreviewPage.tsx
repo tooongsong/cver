@@ -2,21 +2,29 @@ import { useEffect, useRef } from 'react';
 import { renderAsync } from 'docx-preview';
 import type { FitResult } from '../../types/tailor';
 import { measureFit } from '../../services/fitService';
+import { detectFonts, type DetectedFonts } from '../../services/fontDetector';
 import styles from './DocxPreviewPage.module.css';
 
 type Props = {
   buffer: ArrayBuffer;
   onFitChange: (result: FitResult) => void;
+  fontOverrides?: Record<string, string>;   // original -> user-chosen substitute
+  onFontsDetected?: (fonts: DetectedFonts) => void;
+  reRenderKey?: number;                      // bump to force re-render (e.g. after font upload)
 };
 
-export function DocxPreviewPage({ buffer, onFitChange }: Props) {
+export function DocxPreviewPage({
+  buffer,
+  onFitChange,
+  fontOverrides,
+  onFontsDetected,
+  reRenderKey,
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const rendered = useRef<ArrayBuffer | null>(null);
 
   useEffect(() => {
     const el = containerRef.current;
-    if (!el || rendered.current === buffer) return;
-    rendered.current = buffer;
+    if (!el) return;
     el.innerHTML = '';
 
     renderAsync(buffer, el, undefined, {
@@ -29,15 +37,20 @@ export function DocxPreviewPage({ buffer, onFitChange }: Props) {
       renderFooters: true,
       useBase64URL: true,
       className: 'docx',
-    }).then(() => {
+    }).then(async () => {
       if (!containerRef.current) return;
-      patchFontStacks(containerRef.current);
+      // Detect BEFORE patching so we report the original document fonts
+      const detected = detectFonts(containerRef.current);
+      onFontsDetected?.(detected);
+      patchFontStacks(containerRef.current, fontOverrides ?? {});
+      // Wait for any freshly loaded fonts to be ready before measuring fit
+      if (document.fonts?.ready) await document.fonts.ready;
       containerRef.current.setAttribute('contenteditable', 'true');
       onFitChange(measureFit(containerRef.current));
     }).catch((err) => {
       console.error('[docx-preview] render failed', err);
     });
-  }, [buffer, onFitChange]);
+  }, [buffer, onFitChange, fontOverrides, onFontsDetected, reRenderKey]);
 
   return <div ref={containerRef} className={styles.host} suppressContentEditableWarning />;
 }
@@ -59,7 +72,7 @@ const FONT_ALIASES: Record<string, string> = {
 };
 const SYMBOL_FALLBACK = '"Segoe UI Symbol", "Noto Sans Symbols 2", "Apple Symbols", sans-serif';
 
-function patchFontStacks(root: HTMLElement) {
+function patchFontStacks(root: HTMLElement, overrides: Record<string, string>) {
   const all = root.querySelectorAll<HTMLElement>('[style*="font-family"]');
   all.forEach((el) => {
     const style = el.getAttribute('style') ?? '';
@@ -67,9 +80,11 @@ function patchFontStacks(root: HTMLElement) {
       const parts = String(stack)
         .split(',')
         .map((s) => s.trim().replace(/^["']|["']$/g, ''));
-      const aliased = parts.map((name) => {
+      const aliased = parts.flatMap((name) => {
+        const userOverride = overrides[name];
+        if (userOverride) return [`"${userOverride}"`, `"${name}"`];
         const alias = FONT_ALIASES[name.toLowerCase()];
-        return alias ? `"${alias}", "${name}"` : `"${name}"`;
+        return alias ? [`"${alias}"`, `"${name}"`] : [`"${name}"`];
       });
       return `font-family: ${aliased.join(', ')}, ${SYMBOL_FALLBACK}`;
     });

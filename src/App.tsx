@@ -14,9 +14,11 @@ import { TypographyPanel, DEFAULT_TYPOGRAPHY } from './components/TypographyPane
 import type { TypographySettings } from './components/TypographyPanel/TypographyPanel';
 import { ExportControls } from './components/ExportControls/ExportControls';
 import { VersionSwitcher } from './components/VersionSwitcher/VersionSwitcher';
+import { FontsPanel } from './components/FontsPanel/FontsPanel';
+import type { DetectedFonts } from './services/fontDetector';
 import styles from './App.module.css';
 
-type DrawerType = 'import' | 'jd' | 'changes' | 'paste' | 'type' | 'more' | null;
+type DrawerType = 'import' | 'jd' | 'changes' | 'paste' | 'type' | 'fonts' | 'more' | null;
 type AppPhase = 'landing' | 'editor';
 
 export default function App() {
@@ -27,6 +29,9 @@ export default function App() {
   const [importedLayout, setImportedLayout] = useState<LayoutSchema | null>(null);
   const [rawHtml, setRawHtml] = useState<string | null>(null);
   const [docxBuffer, setDocxBuffer] = useState<ArrayBuffer | null>(null);
+  const [detectedFonts, setDetectedFonts] = useState<DetectedFonts>({ used: [], missing: [] });
+  const [fontOverrides, setFontOverrides] = useState<Record<string, string>>({});
+  const [fontReloadKey, setFontReloadKey] = useState(0);
 
   const pendingCount = editor.proposedChanges.filter((c) => c.status === 'pending').length;
   const totalChanges = editor.proposedChanges.length;
@@ -43,7 +48,7 @@ export default function App() {
   }
 
   function getPanelWidth(d: DrawerType): number {
-    if (d === 'type' || d === 'more') return 320;
+    if (d === 'type' || d === 'more' || d === 'fonts') return 320;
     return 420;
   }
 
@@ -133,6 +138,15 @@ export default function App() {
             /03 TYPE
           </button>
           <button
+            className={`${styles.toolBtn} ${openDrawer === 'fonts' ? styles.toolBtnActive : ''}`}
+            onClick={() => toggleDrawer('fonts')}
+          >
+            FONTS
+            {detectedFonts.missing.length > 0 && (
+              <span className={styles.toolBtnBadge}>{detectedFonts.missing.length}</span>
+            )}
+          </button>
+          <button
             className={`${styles.toolBtn} ${openDrawer === 'jd' ? styles.toolBtnActive : ''}`}
             onClick={() => toggleDrawer('jd')}
           >
@@ -206,6 +220,23 @@ export default function App() {
                 detectedFont={detectedFont}
                 detectedColor={detectedColor}
                 onReset={() => setTypography(DEFAULT_TYPOGRAPHY)}
+              />
+            </ToolPanel>
+          )}
+          {openDrawer === 'fonts' && (
+            <ToolPanel title="FONTS" onClose={() => setOpenDrawer(null)}>
+              <FontsPanel
+                detected={detectedFonts.used}
+                missing={detectedFonts.missing}
+                overrides={fontOverrides}
+                onOverride={(orig, sub) => {
+                  setFontOverrides((prev) => {
+                    const next = { ...prev };
+                    if (sub) next[orig] = sub; else delete next[orig];
+                    return next;
+                  });
+                }}
+                onFontLoaded={() => setFontReloadKey((k) => k + 1)}
               />
             </ToolPanel>
           )}
@@ -300,6 +331,9 @@ export default function App() {
               <DocxPreviewPage
                 buffer={docxBuffer}
                 onFitChange={editor.setFitResult}
+                fontOverrides={fontOverrides}
+                onFontsDetected={setDetectedFonts}
+                reRenderKey={fontReloadKey}
               />
             ) : rawHtml ? (
               <RawResumePage
