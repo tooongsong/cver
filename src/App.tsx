@@ -18,12 +18,18 @@ import { FontsPanel } from './components/FontsPanel/FontsPanel';
 import type { DetectedFonts } from './services/fontDetector';
 import { TemplatesPanel } from './components/TemplatesPanel/TemplatesPanel';
 import { analyzeResume, type ResumeSignals } from './services/resumeAnalyzer';
-import type { TemplatePreset } from './services/templates';
+import { recommendTemplate, type TemplatePreset } from './services/templates';
 import { CompareView } from './components/CompareView/CompareView';
 import type { OriginalSnapshot } from './components/CompareView/CompareView';
 import styles from './App.module.css';
 
 type DrawerType = 'import' | 'jd' | 'changes' | 'paste' | 'type' | 'fonts' | 'templates' | 'more' | null;
+
+function parsePrimaryFont(stack?: string): string | null {
+  if (!stack) return null;
+  const first = stack.split(',')[0].trim().replace(/^["']|["']$/g, '');
+  return first || null;
+}
 type AppPhase = 'landing' | 'editor';
 
 export default function App() {
@@ -109,12 +115,27 @@ export default function App() {
   }
 
   function applyTemplate(preset: TemplatePreset) {
-    // Switching to a template hides the imported original renderer and shows
-    // the structured ResumePage template with the preset's overrides.
+    // Switch off the imported-original renderer and show the structured ResumePage
     setTemplateOverrides(preset.styleOverrides);
     setActiveTemplateId(preset.id);
     setDocxBuffer(null);
     setRawHtml(null);
+    // Sync TYPE state to template so the TYPE panel shows the current baseline
+    // and user edits properly override the template values.
+    const so = preset.styleOverrides;
+    const bodyFont = parsePrimaryFont(so['--resume-font']) ?? DEFAULT_TYPOGRAPHY.bodyFont;
+    const nameFont = parsePrimaryFont(so['--resume-name-font']) ?? bodyFont;
+    const headingFont = parsePrimaryFont(so['--resume-heading-font']) ?? bodyFont;
+    setTypography({
+      ...DEFAULT_TYPOGRAPHY,
+      nameFont,
+      headingFont,
+      bodyFont,
+      dateFont: bodyFont,
+      accentColor: so['--resume-accent'] ?? DEFAULT_TYPOGRAPHY.accentColor,
+      baseFontSize: parseFloat(so['--resume-font-size'] ?? '') || DEFAULT_TYPOGRAPHY.baseFontSize,
+      lineHeight: parseFloat(so['--resume-line-height'] ?? '') || DEFAULT_TYPOGRAPHY.lineHeight,
+    });
   }
 
   function keepImportedOriginal() {
@@ -135,8 +156,8 @@ export default function App() {
     '--resume-accent': typography.accentColor,
   };
 
-  // Precedence: imported doc → user typography → applied template (highest, since user just picked it)
-  const combinedOverrides = { ...editor.importedStyleOverrides, ...typographyOverrides, ...templateOverrides };
+  // Precedence: imported doc (baseline) → applied template (baseline swap) → user typography (tweaks win)
+  const combinedOverrides = { ...editor.importedStyleOverrides, ...templateOverrides, ...typographyOverrides };
 
   const detectedFont = (() => {
     const raw = editor.importedStyleOverrides['--resume-font'] ?? '';
@@ -314,13 +335,23 @@ export default function App() {
             </ToolPanel>
           )}
           {openDrawer === 'type' && (
-            <ToolPanel title="/03 TYPE" onClose={() => setOpenDrawer(null)}>
+            <ToolPanel title="/04 TYPE" onClose={() => setOpenDrawer(null)}>
               <TypographyPanel
                 value={typography}
                 onChange={setTypography}
                 detectedFont={detectedFont}
                 detectedColor={detectedColor}
                 onReset={() => setTypography(DEFAULT_TYPOGRAPHY)}
+                isDocxPreviewActive={!!(docxBuffer || rawHtml)}
+                onSwitchToTemplate={
+                  resumeSignals
+                    ? () => {
+                        const { top } = recommendTemplate(resumeSignals);
+                        applyTemplate(top);
+                        setOpenDrawer('type');
+                      }
+                    : undefined
+                }
               />
             </ToolPanel>
           )}

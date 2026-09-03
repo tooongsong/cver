@@ -41,9 +41,11 @@ type Props = {
   detectedFont?: string;
   detectedColor?: string;
   onReset: () => void;
+  isDocxPreviewActive?: boolean;
+  onSwitchToTemplate?: () => void;
 };
 
-export function TypographyPanel({ value, onChange, detectedFont, detectedColor, onReset }: Props) {
+export function TypographyPanel({ value, onChange, detectedFont, detectedColor, onReset, isDocxPreviewActive, onSwitchToTemplate }: Props) {
   function set<K extends keyof TypographySettings>(k: K, v: TypographySettings[K]) {
     onChange({ ...value, [k]: v });
   }
@@ -51,9 +53,22 @@ export function TypographyPanel({ value, onChange, detectedFont, detectedColor, 
   return (
     <div className={styles.panel}>
       <div className={styles.header}>
-        <span className={styles.sectionLabel}>/03 TYPE</span>
+        <span className={styles.sectionLabel}>/04 TYPE</span>
         <button className={styles.resetBtn} onClick={onReset}>RESET</button>
       </div>
+
+      {isDocxPreviewActive && (
+        <div className={styles.warningBanner}>
+          <p className={styles.warningText}>
+            You're viewing the original DOCX render. Font & size controls only apply to templated layouts.
+          </p>
+          {onSwitchToTemplate && (
+            <button className={styles.switchBtn} onClick={onSwitchToTemplate}>
+              Apply recommended template →
+            </button>
+          )}
+        </div>
+      )}
 
       {detectedFont && (
         <div className={styles.detected}>
