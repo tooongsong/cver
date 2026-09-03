@@ -1,0 +1,154 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-workspace, #f5f5f5);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  background: var(--bg, white);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-ui);
+}
+
+.modeToggle {
+  display: flex;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.modeBtn {
+  padding: 5px 12px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  border-right: 1px solid var(--line);
+}
+.modeBtn:last-child { border-right: none; }
+.modeBtn:hover { background: var(--line); color: var(--fg); }
+.modeBtnActive { background: var(--fg); color: white; }
+.modeBtnActive:hover { background: var(--fg); color: white; }
+
+.opacityControl {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  max-width: 300px;
+}
+
+.opacityLabel {
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  min-width: 55px;
+}
+.opacityLabel:last-child { text-align: right; }
+
+.slider {
+  flex: 1;
+  accent-color: var(--fg);
+}
+
+.exitBtn {
+  margin-left: auto;
+  padding: 6px 12px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--fg);
+  cursor: pointer;
+  border-radius: 2px;
+}
+.exitBtn:hover { background: var(--fg); color: white; }
+
+.splitCanvas {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.pane {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-workspace, #f5f5f5);
+}
+
+.paneLabel {
+  padding: 8px 16px;
+  background: var(--fg);
+  color: white;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+}
+
+.paneBody {
+  flex: 1;
+  overflow: auto;
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.divider {
+  width: 4px;
+  background: var(--fg);
+  flex-shrink: 0;
+}
+
+.overlayCanvas {
+  flex: 1;
+  position: relative;
+  overflow: auto;
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.overlayLayer {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: opacity 0.1s;
+}
+
+.originalImage {
+  max-width: 100%;
+  height: auto;
+  box-shadow: var(--shadow-paper);
+  background: white;
+}
+
+.docxHost {
+  display: block;
+}
+.docxHost :global(.docx-wrapper) {
+  background: transparent !important;
+  padding: 0 !important;
+}
+.docxHost :global(section.docx) {
+  margin: 0 auto !important;
+  background: white !important;
+  box-shadow: var(--shadow-paper) !important;
+}

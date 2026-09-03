@@ -6,7 +6,14 @@ import { importFile } from '../../services/importService';
 import styles from './ImportDrawer.module.css';
 
 type Props = {
-  onLoad: (resume: ResumeData, styleOverrides: Record<string, string>, layout: LayoutSchema, rawHtml?: string, docxBuffer?: ArrayBuffer) => void;
+  onLoad: (
+    resume: ResumeData,
+    styleOverrides: Record<string, string>,
+    layout: LayoutSchema,
+    rawHtml?: string,
+    docxBuffer?: ArrayBuffer,
+    originalImage?: { base64: string; mime: string },
+  ) => void;
 };
 
 type State =
@@ -43,7 +50,10 @@ export function ImportDrawer({ onLoad }: Props) {
 
   function handleApply() {
     if (state.phase !== 'preview') return;
-    onLoad(state.result.resume, state.result.styleOverrides, state.result.layout, state.result.rawHtml, state.result.docxBuffer);
+    const originalImage = state.result.originalImageBase64
+      ? { base64: state.result.originalImageBase64, mime: 'image/jpeg' }
+      : undefined;
+    onLoad(state.result.resume, state.result.styleOverrides, state.result.layout, state.result.rawHtml, state.result.docxBuffer, originalImage);
   }
 
   const confidenceLabel: Record<string, string> = {

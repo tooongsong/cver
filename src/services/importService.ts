@@ -10,7 +10,8 @@ export type ImportResult = {
   layout: LayoutSchema;
   styleOverrides: Record<string, string>;
   rawHtml?: string;
-  docxBuffer?: ArrayBuffer;  // original DOCX bytes — rendered via docx-preview
+  docxBuffer?: ArrayBuffer;      // original DOCX bytes — rendered via docx-preview
+  originalImageBase64?: string;  // for PDFs / images: the frozen page image for compare
   confidence: ImportConfidence;
   warnings: string[];
   sourceName: string;
@@ -411,6 +412,7 @@ export async function importViaAI(file: File): Promise<ImportResult> {
     layout,
     styleOverrides,
     rawHtml: ai.html,    // AI-generated faithful HTML
+    originalImageBase64: base64,   // captured page image for compare view
     confidence: 'moderate',
     warnings: [],
     sourceName: file.name,

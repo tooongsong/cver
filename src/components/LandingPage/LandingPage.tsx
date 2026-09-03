@@ -5,7 +5,14 @@ import { importFile } from '../../services/importService';
 import styles from './LandingPage.module.css';
 
 type Props = {
-  onLoad: (resume: ResumeData, styleOverrides: Record<string, string>, layout: LayoutSchema, rawHtml?: string, docxBuffer?: ArrayBuffer) => void;
+  onLoad: (
+    resume: ResumeData,
+    styleOverrides: Record<string, string>,
+    layout: LayoutSchema,
+    rawHtml?: string,
+    docxBuffer?: ArrayBuffer,
+    originalImage?: { base64: string; mime: string },
+  ) => void;
   onUseSample: () => void;
 };
 
@@ -20,7 +27,10 @@ export function LandingPage({ onLoad, onUseSample }: Props) {
     setError(null);
     try {
       const result = await importFile(file);
-      onLoad(result.resume, result.styleOverrides, result.layout, result.rawHtml, result.docxBuffer);
+      const originalImage = result.originalImageBase64
+        ? { base64: result.originalImageBase64, mime: 'image/jpeg' }
+        : undefined;
+      onLoad(result.resume, result.styleOverrides, result.layout, result.rawHtml, result.docxBuffer, originalImage);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Import failed. Try a .docx or .txt file.');
       setLoading(false);

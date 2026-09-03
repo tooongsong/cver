@@ -19,6 +19,8 @@ import type { DetectedFonts } from './services/fontDetector';
 import { TemplatesPanel } from './components/TemplatesPanel/TemplatesPanel';
 import { analyzeResume, type ResumeSignals } from './services/resumeAnalyzer';
 import type { TemplatePreset } from './services/templates';
+import { CompareView } from './components/CompareView/CompareView';
+import type { OriginalSnapshot } from './components/CompareView/CompareView';
 import styles from './App.module.css';
 
 type DrawerType = 'import' | 'jd' | 'changes' | 'paste' | 'type' | 'fonts' | 'templates' | 'more' | null;
@@ -40,6 +42,8 @@ export default function App() {
   const [activeTemplateId, setActiveTemplateId] = useState<string | null>(null);
   const [savedDocxBuffer, setSavedDocxBuffer] = useState<ArrayBuffer | null>(null);
   const [savedRawHtml, setSavedRawHtml] = useState<string | null>(null);
+  const [originalSnapshot, setOriginalSnapshot] = useState<OriginalSnapshot | null>(null);
+  const [compareMode, setCompareMode] = useState(false);
 
   const pendingCount = editor.proposedChanges.filter((c) => c.status === 'pending').length;
   const totalChanges = editor.proposedChanges.length;
@@ -67,6 +71,7 @@ export default function App() {
     html?: string,
     buffer?: ArrayBuffer,
     resume?: import('./types/resume').ResumeData,
+    originalImage?: { base64: string; mime: string },
   ) {
     const fontRaw = styleOverrides['--resume-font'] ?? '';
     const detFont = fontRaw.replace(/['"]/g, '').split(',')[0].trim();
@@ -92,6 +97,15 @@ export default function App() {
     setTemplateOverrides({});
     setActiveTemplateId(null);
     setResumeSignals(resume ? analyzeResume(resume) : null);
+    // Capture snapshot of the original for the Compare view
+    if (originalImage) {
+      setOriginalSnapshot({ kind: 'image', base64: originalImage.base64, mime: originalImage.mime });
+    } else if (buffer) {
+      setOriginalSnapshot({ kind: 'docx', buffer });
+    } else {
+      setOriginalSnapshot(null);
+    }
+    setCompareMode(false);
   }
 
   function applyTemplate(preset: TemplatePreset) {
@@ -130,12 +144,52 @@ export default function App() {
   })();
   const detectedColor = editor.importedStyleOverrides['--resume-accent'];
 
+  function renderCurrentDoc() {
+    if (docxBuffer) {
+      return (
+        <DocxPreviewPage
+          buffer={docxBuffer}
+          onFitChange={editor.setFitResult}
+          fontOverrides={fontOverrides}
+          onFontsDetected={setDetectedFonts}
+          reRenderKey={fontReloadKey}
+        />
+      );
+    }
+    if (rawHtml) {
+      return (
+        <RawResumePage
+          html={rawHtml}
+          onChange={setRawHtml}
+          onFitChange={editor.setFitResult}
+        />
+      );
+    }
+    return (
+      <ResumePage
+        resume={editor.currentResume}
+        template={editor.activeTemplate}
+        layout={importedLayout ?? undefined}
+        onUpdatePersonalInfo={editor.updatePersonalInfo}
+        onUpdateSummary={editor.updateSummary}
+        onUpdateExperience={editor.updateExperience}
+        onUpdateBullet={editor.updateBullet}
+        onUpdateEducation={editor.updateEducation}
+        onUpdateSkillGroup={editor.updateSkillGroup}
+        onFitChange={editor.setFitResult}
+        highlightedBulletIds={highlightedBulletIds}
+        scale={1}
+        styleOverrides={combinedOverrides}
+      />
+    );
+  }
+
   if (appPhase === 'landing') {
     return (
       <LandingPage
-        onLoad={(resume, styleOverrides, layout, html, buffer) => {
+        onLoad={(resume, styleOverrides, layout, html, buffer, originalImage) => {
           editor.loadNewResume(resume, styleOverrides);
-          applyImportedStyle(styleOverrides, layout, html, buffer, resume);
+          applyImportedStyle(styleOverrides, layout, html, buffer, resume, originalImage);
           setAppPhase('editor');
         }}
         onUseSample={() => setAppPhase('editor')}
@@ -159,38 +213,46 @@ export default function App() {
             /01 IMPORT
           </button>
           <button
-            className={`${styles.toolBtn} ${openDrawer === 'paste' ? styles.toolBtnActive : ''}`}
-            onClick={() => toggleDrawer('paste')}
+            className={`${styles.toolBtn} ${openDrawer === 'templates' ? styles.toolBtnActive : ''}`}
+            onClick={() => toggleDrawer('templates')}
           >
-            /02 PASTE
-          </button>
-          <button
-            className={`${styles.toolBtn} ${openDrawer === 'type' ? styles.toolBtnActive : ''}`}
-            onClick={() => toggleDrawer('type')}
-          >
-            /03 TYPE
+            /02 TEMPLATES
           </button>
           <button
             className={`${styles.toolBtn} ${openDrawer === 'fonts' ? styles.toolBtnActive : ''}`}
             onClick={() => toggleDrawer('fonts')}
           >
-            FONTS
+            /03 FONTS
             {detectedFonts.missing.length > 0 && (
               <span className={styles.toolBtnBadge}>{detectedFonts.missing.length}</span>
             )}
           </button>
           <button
-            className={`${styles.toolBtn} ${openDrawer === 'templates' ? styles.toolBtnActive : ''}`}
-            onClick={() => toggleDrawer('templates')}
+            className={`${styles.toolBtn} ${openDrawer === 'type' ? styles.toolBtnActive : ''}`}
+            onClick={() => toggleDrawer('type')}
           >
-            TEMPLATES
+            /04 TYPE
           </button>
           <button
             className={`${styles.toolBtn} ${openDrawer === 'jd' ? styles.toolBtnActive : ''}`}
             onClick={() => toggleDrawer('jd')}
           >
-            /04 TAILOR
+            /05 TAILOR
             {editor.isTailoring && <span className={styles.toolBtnSpinner} />}
+          </button>
+          <button
+            className={`${styles.toolBtn} ${openDrawer === 'paste' ? styles.toolBtnActive : ''}`}
+            onClick={() => toggleDrawer('paste')}
+          >
+            /06 PASTE
+          </button>
+          <button
+            className={`${styles.toolBtn} ${compareMode ? styles.toolBtnActive : ''} ${!originalSnapshot ? styles.toolBtnDisabled : ''}`}
+            onClick={() => originalSnapshot && setCompareMode((v) => !v)}
+            disabled={!originalSnapshot}
+            title={originalSnapshot ? 'Compare with imported original' : 'No original captured — compare needs an import'}
+          >
+            COMPARE
           </button>
           <button
             className={`${styles.toolBtn} ${openDrawer === 'more' ? styles.toolBtnActive : ''}`}
@@ -238,9 +300,9 @@ export default function App() {
           {openDrawer === 'import' && (
             <ToolPanel title="/01 IMPORT" onClose={() => setOpenDrawer(null)}>
               <ImportDrawer
-                onLoad={(resume, styleOverrides, layout, html, buffer) => {
+                onLoad={(resume, styleOverrides, layout, html, buffer, originalImage) => {
                   editor.loadNewResume(resume, styleOverrides);
-                  applyImportedStyle(styleOverrides, layout, html, buffer, resume);
+                  applyImportedStyle(styleOverrides, layout, html, buffer, resume, originalImage);
                   setOpenDrawer(null);
                 }}
               />
@@ -369,46 +431,24 @@ export default function App() {
 
         {/* ── Canvas ── */}
         <div className={`${styles.resumeScroller} resume-scroller`}>
-          <div className={styles.workspaceGrid} aria-hidden />
-
-          <div className={styles.pageDecorations}>
-            <div className={`${styles.cornerMark} ${styles.tl}`} aria-hidden />
-            <div className={`${styles.cornerMark} ${styles.tr}`} aria-hidden />
-            <div className={`${styles.cornerMark} ${styles.bl}`} aria-hidden />
-            <div className={`${styles.cornerMark} ${styles.br}`} aria-hidden />
-
-            {docxBuffer ? (
-              <DocxPreviewPage
-                buffer={docxBuffer}
-                onFitChange={editor.setFitResult}
-                fontOverrides={fontOverrides}
-                onFontsDetected={setDetectedFonts}
-                reRenderKey={fontReloadKey}
-              />
-            ) : rawHtml ? (
-              <RawResumePage
-                html={rawHtml}
-                onChange={setRawHtml}
-                onFitChange={editor.setFitResult}
-              />
-            ) : (
-              <ResumePage
-                resume={editor.currentResume}
-                template={editor.activeTemplate}
-                layout={importedLayout ?? undefined}
-                onUpdatePersonalInfo={editor.updatePersonalInfo}
-                onUpdateSummary={editor.updateSummary}
-                onUpdateExperience={editor.updateExperience}
-                onUpdateBullet={editor.updateBullet}
-                onUpdateEducation={editor.updateEducation}
-                onUpdateSkillGroup={editor.updateSkillGroup}
-                onFitChange={editor.setFitResult}
-                highlightedBulletIds={highlightedBulletIds}
-                scale={1}
-                styleOverrides={combinedOverrides}
-              />
-            )}
-          </div>
+          {compareMode && originalSnapshot ? (
+            <CompareView
+              snapshot={originalSnapshot}
+              onExit={() => setCompareMode(false)}
+              currentPane={renderCurrentDoc()}
+            />
+          ) : (
+            <>
+              <div className={styles.workspaceGrid} aria-hidden />
+              <div className={styles.pageDecorations}>
+                <div className={`${styles.cornerMark} ${styles.tl}`} aria-hidden />
+                <div className={`${styles.cornerMark} ${styles.tr}`} aria-hidden />
+                <div className={`${styles.cornerMark} ${styles.bl}`} aria-hidden />
+                <div className={`${styles.cornerMark} ${styles.br}`} aria-hidden />
+                {renderCurrentDoc()}
+              </div>
+            </>
+          )}
 
           {editor.isTailoring && (
             <div className={styles.loadingOverlay}>
