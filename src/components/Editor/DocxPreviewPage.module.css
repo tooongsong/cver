@@ -1,21 +1,26 @@
-.scaler {
-  transform-origin: top center;
+/* Host container: let docx-preview render at its true page size.
+   No fixed width/height, no overflow clipping. */
+.host {
+  display: block;
+  outline: none;
 }
 
-/* Let docx-preview render at its natural size, then we clip to page */
-.docxContainer {
-  background: white;
-  box-shadow: var(--shadow-paper);
-}
-
-/* Clean up docx-preview's default wrapper chrome */
-.docxContainer :global(.docx-wrapper) {
-  background: white !important;
+/* Kill docx-preview's default gray wrapper background */
+.host :global(.docx-wrapper) {
+  background: transparent !important;
   padding: 0 !important;
-  display: block !important;
 }
 
-.docxContainer :global(section.docx) {
-  box-shadow: none !important;
-  margin: 0 !important;
+/* Each rendered page (docx-preview emits section.docx per page).
+   Keep its original width and page shadow, drop the outer margin. */
+.host :global(section.docx) {
+  margin: 0 auto !important;
+  background: white !important;
+  box-shadow: var(--shadow-paper) !important;
+}
+
+/* Editing affordance */
+.host:focus-within :global(section.docx) {
+  outline: 2px solid rgba(139, 92, 246, 0.25);
+  outline-offset: 2px;
 }

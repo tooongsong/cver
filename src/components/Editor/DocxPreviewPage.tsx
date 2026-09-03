@@ -10,17 +10,16 @@ type Props = {
 };
 
 export function DocxPreviewPage({ buffer, onFitChange }: Props) {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const renderedBuffer = useRef<ArrayBuffer | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const rendered = useRef<ArrayBuffer | null>(null);
 
   useEffect(() => {
-    if (!wrapperRef.current) return;
-    if (renderedBuffer.current === buffer) return;
-    renderedBuffer.current = buffer;
+    const el = containerRef.current;
+    if (!el || rendered.current === buffer) return;
+    rendered.current = buffer;
+    el.innerHTML = '';
 
-    wrapperRef.current.innerHTML = '';
-
-    renderAsync(buffer, wrapperRef.current, undefined, {
+    renderAsync(buffer, el, undefined, {
       inWrapper: true,
       ignoreWidth: false,
       ignoreHeight: false,
@@ -29,16 +28,17 @@ export function DocxPreviewPage({ buffer, onFitChange }: Props) {
       renderHeaders: true,
       renderFooters: true,
       useBase64URL: true,
+      className: 'docx',
     }).then(() => {
-      if (wrapperRef.current) {
-        onFitChange(measureFit(wrapperRef.current));
+      if (containerRef.current) {
+        // Make it editable so the user can tweak text
+        containerRef.current.setAttribute('contenteditable', 'true');
+        onFitChange(measureFit(containerRef.current));
       }
+    }).catch((err) => {
+      console.error('[docx-preview] render failed', err);
     });
   }, [buffer, onFitChange]);
 
-  return (
-    <div className={styles.scaler}>
-      <div ref={wrapperRef} className={styles.docxContainer} />
-    </div>
-  );
+  return <div ref={containerRef} className={styles.host} suppressContentEditableWarning />;
 }
